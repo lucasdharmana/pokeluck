@@ -159,6 +159,20 @@
   .stat-val.blue{color:var(--blue)}
   .stat-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
 
+  /* ============ TICKER ============ */
+  .ticker-wrap{
+    width:100%;overflow:hidden;background:rgba(255,215,0,0.05);
+    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    padding:12px 0;
+  }
+  .ticker{
+    display:inline-block;white-space:nowrap;animation:ticker 25s linear infinite;
+    font-size:13px;font-weight:600;color:var(--gold);
+  }
+  .ticker span{margin-right:48px;display:inline-flex;align-items:center;gap:8px}
+  .ticker span::before{content:"";width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block}
+  @keyframes ticker{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+
   /* ============ PACKS ============ */
   .section{max-width:1280px;margin:0 auto;padding:80px 24px}
   .section-head{margin-bottom:48px;text-align:center}
@@ -309,7 +323,7 @@
 <section class="hero">
   <div class="badge"><span class="badge-dot"></span>Live & Verified</div>
   <h1>Hold Tokens.<br><span>Boost Luck.</span></h1>
-  <p>The exclusive token-gated pack casino. The more $POKELUCK you hold, the higher your multiplier. Reduced risk, more rewards.</p>
+  <p>The exclusive token-gated pack casino. The more $POKELUCK you hold, the higher your multiplier. Reduced risk, more rewards. Hard 3% floor on pack value, up to 4000%+ upside.</p>
   <div style="display:flex;gap:16px;justify-content:center;margin-bottom:64px">
     <button class="btn btn-primary" style="padding:16px 32px;font-size:16px" onclick="document.getElementById('packs').scrollIntoView({behavior:'smooth'})">View Packs</button>
     <button class="btn btn-gold" style="padding:16px 32px;font-size:16px">Buy $POKELUCK</button>
@@ -333,6 +347,22 @@
     </div>
   </div>
 </section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span>USER 0x8F...2A just pulled a 4000% Grail</span>
+    <span>USER 0x1B...9C just pulled a Legendary Holo</span>
+    <span>USER 0x4D...7E just unlocked Tier 3 Luck</span>
+    <span>USER 0x9A...1F just pulled a 1200% Epic</span>
+    <span>USER 0x3C...8B just opened High Roller Pack</span>
+    <span>USER 0x8F...2A just pulled a 4000% Grail</span>
+    <span>USER 0x1B...9C just pulled a Legendary Holo</span>
+    <span>USER 0x4D...7E just unlocked Tier 3 Luck</span>
+    <span>USER 0x9A...1F just pulled a 1200% Epic</span>
+    <span>USER 0x3C...8B just opened High Roller Pack</span>
+  </div>
+</div>
 
 <!-- PACKS -->
 <section id="packs" class="section">
@@ -480,73 +510,3 @@
     "SYNCING DEX LIQUIDITY...",
     "READY."
   ];
-  let introIdx = 0;
-  const textEl = document.getElementById('introText');
-  const barEl = document.getElementById('introBar');
-  
-  // 15 second wait
-  const INTRO_DURATION = 15000; 
-  const startTime = Date.now();
-
-  const introInterval = setInterval(() => {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min((elapsed / INTRO_DURATION) * 100, 100);
-    
-    barEl.style.width = progress + '%';
-
-    const newIdx = Math.floor(elapsed / 2500) % introTexts.length;
-    if (newIdx !== introIdx) {
-      introIdx = newIdx;
-      textEl.style.opacity = 0;
-      setTimeout(() => {
-        textEl.innerText = introTexts[introIdx];
-        textEl.style.opacity = 1;
-      }, 200);
-    }
-
-    if (progress >= 100) {
-      clearInterval(introInterval);
-      document.getElementById('intro').classList.add('done');
-      document.body.style.overflow = '';
-    }
-  }, 50);
-
-  document.body.style.overflow = 'hidden';
-
-  // --- GATE MODAL LOGIC ---
-  window.openGateModal = function() {
-    document.getElementById('gateModal').classList.add('active');
-  }
-
-  window.closeGateModal = function() {
-    document.getElementById('gateModal').classList.remove('active');
-    document.getElementById('walletInput').value = '';
-  }
-
-  window.handleVerify = function() {
-    const val = document.getElementById('walletInput').value.trim();
-    const btn = document.querySelector('.modal-btn');
-    
-    if (!val) {
-      document.getElementById('walletInput').style.borderColor = 'var(--red)';
-      return;
-    }
-
-    btn.innerText = 'Scanning wallet...';
-    btn.style.opacity = '0.7';
-    btn.disabled = true;
-
-    setTimeout(() => {
-      btn.innerText = 'Insufficient Holding';
-      btn.style.background = 'var(--red)';
-      btn.style.color = '#fff';
-      
-      setTimeout(() => {
-        closeGateModal();
-        setTimeout(() => {
-          btn.innerText = 'Verify Wallet';
-          btn.style.background = '';
-          btn.style.color = '';
-          btn.style.opacity = '1';
-          btn.disabled = false;
-          document.getElementById('walletInput').style
