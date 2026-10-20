@@ -5,32 +5,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>PokéLuck — Token-Gated Pack Casino</title>
 <meta name="description" content="Hold $POKELUCK to unlock exclusive packs. Boost your luck multiplier. Reduced risk, more rewards." />
+<meta name="theme-color" content="#050508" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://images.pokemontcg.io" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
 <style>
   :root{
-    --bg:#050508; --surface:#0d0e15; --surface-hover:#131521;
+    --bg:#050508; --surface:#0d0e15; --surface-2:#11131c;
     --border:#1c1f2b; --border-bright:#2a2e42;
     --text:#ffffff; --text-muted:#8b90a0;
-    --red:#ff3b30; --red-glow:rgba(255,59,48,0.15);
-    --gold:#ffd700; --gold-dark:#b89b00;
-    --blue:#007aff;
+    --gold:#ffd700; --gold-2:#ffaa00; --gold-dark:#b89b00; --gold-soft:rgba(255,215,0,0.1);
+    /* tier colours — used only on their tier */
+    --red:#ff3b30; --blue:#3b82f6; --purple:#8a2be2;
     --font-sans:'Inter',system-ui,sans-serif;
     --font-display:'Space Grotesk',system-ui,sans-serif;
     --ease:cubic-bezier(0.16,1,0.3,1);
+    --header-h:72px;
   }
+  @property --angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased}
+  html{background:var(--bg);scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 16px);scrollbar-color:var(--border-bright) var(--bg)}
+  body{min-height:100vh;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;-webkit-font-smoothing:antialiased}
+  body.locked{overflow:hidden}
   a{text-decoration:none;color:inherit}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  img{max-width:100%}
+  ::selection{background:var(--gold);color:#000}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:99px;border:2px solid var(--bg)}
+  ::-webkit-scrollbar-thumb:hover{background:var(--gold-dark)}
 
-  .ambient{
-    position:fixed;inset:0;z-index:-1;pointer-events:none;
-    background:
-      radial-gradient(circle at 15% 10%, rgba(255,59,48,0.06) 0%, transparent 40%),
-      radial-gradient(circle at 85% 90%, rgba(0,122,255,0.06) 0%, transparent 40%),
-      radial-gradient(circle at 50% 50%, rgba(255,215,0,0.03) 0%, transparent 60%);
+  /* ============ BACKGROUND: drifting glow + grain ============ */
+  .ambient{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+  .ambient::before,.ambient::after{
+    content:"";position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(80px);opacity:.55;
+  }
+  .ambient::before{top:-20vmax;left:-15vmax;background:radial-gradient(circle,rgba(255,59,48,0.10),transparent 65%);animation:drift1 38s ease-in-out infinite alternate}
+  .ambient::after{bottom:-25vmax;right:-15vmax;background:radial-gradient(circle,rgba(255,215,0,0.08),transparent 65%);animation:drift2 46s ease-in-out infinite alternate}
+  @keyframes drift1{to{transform:translate(18vmax,22vmax) scale(1.1)}}
+  @keyframes drift2{to{transform:translate(-20vmax,-18vmax) scale(1.15)}}
+  .grain{
+    position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   /* ============ INTRO (15s wait) ============ */
@@ -40,7 +60,6 @@
     transition:opacity 1s var(--ease),visibility 1s;
   }
   #intro.done{opacity:0;visibility:hidden;pointer-events:none}
-
   .intro-ball-wrap{
     position:relative;width:min(30vmin,180px);aspect-ratio:1;margin-bottom:40px;
     filter:drop-shadow(0 0 40px rgba(255,59,48,0.3));
@@ -61,7 +80,6 @@
     width:8%;height:8%;background:#fff;border-radius:50%;border:2px solid #111;
   }
   @keyframes spin{100%{transform:rotate(360deg)}}
-
   .intro-loader{width:min(400px,80vw);text-align:center}
   .intro-text{
     font-family:var(--font-display);font-size:14px;letter-spacing:0.2em;
@@ -70,302 +88,430 @@
   }
   .intro-bar-bg{height:4px;background:#1c1f2b;border-radius:99px;overflow:hidden;position:relative}
   .intro-bar-fill{
-    position:absolute;top:0;left:0;bottom:0;background:var(--gold);
-    width:0%;transition:width 0.1s linear;
+    position:absolute;inset:0;background:linear-gradient(90deg,var(--gold-dark),var(--gold));
+    transform:scaleX(0);transform-origin:left center;will-change:transform;
     box-shadow:0 0 10px var(--gold);
   }
   .intro-slogan{
     margin-top:48px;font-family:var(--font-display);font-size:clamp(20px,4vw,32px);
-    font-weight:700;letter-spacing:-0.02em;text-align:center;
-    background:linear-gradient(to right, #fff, #8b90a0);-webkit-background-clip:text;color:transparent;
+    font-weight:700;letter-spacing:-0.02em;text-align:center;padding:0 16px;
+    background:linear-gradient(to right, #fff, #8b90a0);-webkit-background-clip:text;background-clip:text;color:transparent;
   }
 
   /* ============ NAV ============ */
   header{
-    position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.8);
-    backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+    position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.72);
+    backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);
+    border-bottom:1px solid var(--border);
   }
   .nav{
-    max-width:1280px;margin:0 auto;padding:0 24px;height:72px;
-    display:flex;align-items:center;justify-content:space-between;
+    max-width:1280px;margin:0 auto;padding:0 24px;height:var(--header-h);
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
   }
-  .logo{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-size:22px;font-weight:700}
+  .logo{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.02em}
   .logo-icon{
-    width:28px;height:28px;border-radius:50%;
+    width:28px;height:28px;border-radius:50%;flex:none;position:relative;
     background:linear-gradient(#ff3b30 0 46%,#111 46% 54%,#fff 54% 100%);
-    box-shadow:inset -2px -2px 6px rgba(0,0,0,0.5);
-    position:relative;
+    box-shadow:inset -2px -2px 6px rgba(0,0,0,0.5);transition:transform .6s var(--ease);
   }
+  .logo:hover .logo-icon{transform:rotate(360deg)}
   .logo-icon::before{content:"";position:absolute;inset:0;margin:auto;width:8px;height:8px;background:#fff;border-radius:50%;border:2px solid #111}
   .nav-links{display:flex;gap:32px;align-items:center}
-  .nav-links a{font-size:14px;font-weight:500;color:var(--text-muted);transition:color 0.2s}
+  .nav-links a{font-size:14px;font-weight:600;color:var(--text-muted);transition:color 0.2s;position:relative;padding:6px 0}
+  .nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:var(--gold);transform:scaleX(0);transition:transform .3s var(--ease)}
   .nav-links a:hover,.nav-links a.active{color:var(--text)}
+  .nav-links a.active::after{transform:scaleX(1)}
 
   .nav-tier{
     display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);
     border:1px solid var(--border);padding:6px 12px;border-radius:99px;cursor:pointer;
-    transition:all 0.2s;margin-right:8px;
+    transition:background 0.2s,border-color 0.2s;margin-right:8px;
   }
-  .nav-tier:hover{background:rgba(255,255,255,0.06);border-color:var(--text-muted)}
-  .nav-tier span{font-size:12px;font-weight:700;color:var(--gold)}
+  .nav-tier:hover{background:var(--gold-soft);border-color:rgba(255,215,0,.35)}
+  .nav-tier span{font-size:12px;font-weight:800;color:var(--gold)}
   .nav-tier .bar{width:48px;height:4px;background:#1c1f2b;border-radius:99px;overflow:hidden}
   .nav-tier .bar div{width:60%;height:100%;background:var(--gold)}
 
   .btn{
     display:inline-flex;align-items:center;justify-content:center;
-    padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;
-    transition:all 0.2s var(--ease);cursor:pointer;
+    padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;white-space:nowrap;
+    transition:transform 0.2s var(--ease),box-shadow 0.3s var(--ease),background .2s;
   }
-  .btn-primary{
-    background:var(--text);color:var(--bg);
-    box-shadow:0 4px 14px rgba(255,255,255,0.1);
-  }
-  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,255,255,0.15)}
+  .btn-lg{padding:16px 32px;font-size:16px}
+  .btn-primary{background:var(--text);color:var(--bg);box-shadow:0 4px 14px rgba(255,255,255,0.1)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,255,255,0.22)}
   .btn-gold{
-    background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-    color:#000;font-weight:700;
+    background:linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 55%, var(--gold-dark) 100%);
+    color:#000;font-weight:800;position:relative;overflow:hidden;
     box-shadow:0 4px 14px rgba(255,215,0,0.2);
   }
-  .btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,215,0,0.3)}
+  .btn-gold::after{
+    content:"";position:absolute;inset:0;transform:translateX(-120%);
+    background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);
+  }
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,215,0,.4),0 8px 32px rgba(255,215,0,0.45)}
+  .btn-gold:hover::after{transform:translateX(120%);transition:transform .7s var(--ease)}
 
   /* ============ HERO ============ */
-  .hero{
-    max-width:1280px;margin:0 auto;padding:80px 24px;text-align:center;
+  .hero-shell{position:relative;overflow:hidden;isolation:isolate}
+  .hero-ball{
+    position:absolute;left:50%;top:50%;width:min(1000px,150vw);aspect-ratio:1;
+    translate:-50% -50%;pointer-events:none;z-index:-1;
+    animation:spin 120s linear infinite;
   }
+  .hero-ball-fade{
+    position:absolute;inset:0;z-index:-1;pointer-events:none;
+    -webkit-mask:linear-gradient(to bottom,#000 55%,transparent 92%);mask:linear-gradient(to bottom,#000 55%,transparent 92%);
+  }
+  .hero-ball .line{fill:none;stroke:rgba(255,255,255,0.055);stroke-width:.7}
+  .hero-ball .gold{fill:none;stroke:rgba(255,215,0,0.11);stroke-width:.7}
+  .hero{max-width:1280px;margin:0 auto;padding:96px 24px 88px;text-align:center;position:relative}
   .badge{
     display:inline-flex;align-items:center;gap:8px;
-    padding:8px 16px;border-radius:99px;background:rgba(255,215,0,0.1);
+    padding:8px 16px;border-radius:99px;background:var(--gold-soft);
     border:1px solid rgba(255,215,0,0.2);color:var(--gold);
-    font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+    font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;
     margin-bottom:32px;
   }
   .badge-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;box-shadow:0 0 10px var(--gold);animation:pulse 2s infinite}
   @keyframes pulse{50%{opacity:0.5}}
   h1{
-    font-family:var(--font-display);font-size:clamp(48px,7vw,88px);
-    line-height:1.05;letter-spacing:-0.03em;font-weight:700;margin-bottom:24px;
+    font-family:var(--font-display);font-size:clamp(52px,9vw,120px);
+    line-height:.95;letter-spacing:-0.045em;font-weight:700;margin-bottom:28px;
   }
-  h1 span{color:var(--gold);background:linear-gradient(to right, #ffd700, #ffaa00);-webkit-background-clip:text;color:transparent}
+  h1 span{
+    background:linear-gradient(100deg, var(--gold) 0%, var(--gold-2) 40%, #fff3b0 50%, var(--gold-2) 60%, var(--gold) 100%);
+    background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:goldShift 8s ease-in-out infinite;
+  }
+  @keyframes goldShift{0%,100%{background-position:100% 0}50%{background-position:0 0}}
   .hero p{
     font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:600px;margin:0 auto 48px;line-height:1.6;
   }
+  .hero-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:72px}
 
-  .hero-stats{
-    display:flex;justify-content:center;gap:24px;margin-top:48px;flex-wrap:wrap;
-  }
+  .hero-stats{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
   .stat-box{
-    background:var(--surface);border:1px solid var(--border);
-    padding:24px 32px;border-radius:16px;text-align:left;min-width:220px;
+    background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--border);
+    padding:28px 32px;border-radius:20px;text-align:left;min-width:240px;
     position:relative;overflow:hidden;
   }
   .stat-box::before{
     content:"";position:absolute;top:0;left:0;right:0;height:2px;
     background:linear-gradient(90deg, transparent, var(--gold), transparent);
   }
-  .stat-val{font-family:var(--font-display);font-size:28px;font-weight:700;margin-bottom:6px}
-  .stat-val.green{color:#30d158}
+  .stat-val{font-family:var(--font-display);font-size:clamp(40px,4.4vw,52px);line-height:1;font-weight:700;letter-spacing:-0.03em;margin-bottom:12px;font-variant-numeric:tabular-nums}
   .stat-val.gold{color:var(--gold)}
-  .stat-val.blue{color:var(--blue)}
-  .stat-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
+  .stat-val.gold-soft{color:#ffe680}
+  .stat-label{font-size:12px;color:var(--text);text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
+  .stat-note{font-size:12px;color:var(--text-muted);margin-top:6px}
 
-  /* ============ PACKS ============ */
-  .section{max-width:1280px;margin:0 auto;padding:60px 24px 80px}
-  .section-head{margin-bottom:32px;text-align:center;position:relative}
-  .section-head h2{font-family:var(--font-display);font-size:36px;margin-bottom:12px}
+  /* ============ SECTIONS ============ */
+  .section{max-width:1280px;margin:0 auto;padding:72px 24px 88px}
+  .section-head{margin-bottom:40px;text-align:center;position:relative}
+  .section-head h2{font-family:var(--font-display);font-size:clamp(32px,5vw,52px);letter-spacing:-0.035em;line-height:1.05;margin-bottom:14px}
   .section-head p{color:var(--text-muted);font-size:16px}
 
-  /* Countdown Timer */
   .countdown-wrap{
-    display:inline-flex;align-items:center;gap:8px;margin-top:16px;
-    background:rgba(255,59,48,0.1);border:1px solid rgba(255,59,48,0.2);
-    padding:8px 16px;border-radius:99px;color:var(--red);font-size:13px;font-weight:700;
+    display:inline-flex;align-items:center;gap:8px;margin-top:20px;
+    background:var(--gold-soft);border:1px solid rgba(255,215,0,0.22);
+    padding:8px 16px;border-radius:99px;color:var(--gold);font-size:13px;font-weight:600;
   }
-  .countdown-wrap svg{width:16px;height:16px;fill:currentColor;animation:pulse 2s infinite}
+  .countdown-wrap svg{width:16px;height:16px;fill:currentColor;animation:pulse 2s infinite;flex:none}
+  #countdownText{font-variant-numeric:tabular-nums;font-weight:800}
 
-  .pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+  /* ============ PACKS (foil booster style) ============ */
+  .pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(270px,100%),1fr));gap:28px;perspective:1200px}
   .pack-card{
+    --foil-1:#a7afc0; --foil-2:#4a505e; --glow:transparent;
+    --rx:0deg; --ry:0deg; --lift:0px; --mx:50%; --my:30%;
     background:var(--surface);border:1px solid var(--border);border-radius:20px;
-    overflow:hidden;transition:all 0.3s var(--ease);position:relative;cursor:pointer;
+    overflow:hidden;position:relative;cursor:pointer;transform-style:preserve-3d;
+    transform:rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
+    box-shadow:0 0 0 0 var(--glow);
+    transition:transform .25s var(--ease),border-color .3s,box-shadow .3s,
+               opacity .8s var(--ease) var(--d,0s),translate .8s var(--ease) var(--d,0s);
   }
-  .pack-card:hover{transform:translateY(-8px);border-color:var(--border-bright);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
+  .pack-card:hover{--lift:-8px;border-color:var(--border-bright);box-shadow:0 24px 50px rgba(0,0,0,0.5)}
 
-  .pack-card.whale{
-    background:linear-gradient(180deg, #160a22 0%, #0d0e15 100%);
-    border-color:#3b1d5a;
-  }
-  .pack-card.whale:hover{border-color:#5a2b8a;box-shadow:0 20px 40px rgba(90,43,138,0.2)}
-
+  /* foil art area */
   .pack-img{
-    height:220px;position:relative;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg, #1c1f2b, #0d0e15);overflow:hidden;
+    height:230px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;
+    background:
+      repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 2px,transparent 2px 9px),
+      linear-gradient(145deg,var(--foil-1) 0%,var(--foil-2) 55%,#0d0e15 100%);
   }
-  .pack-img.whale-bg{background:linear-gradient(135deg, #2a1142, #0d0e15)}
+  /* crimped seal at the top of the pack */
+  .pack-img::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:18px;z-index:3;
+    background:
+      repeating-linear-gradient(90deg,rgba(255,255,255,.28) 0 2px,rgba(0,0,0,.28) 2px 5px),
+      linear-gradient(180deg,var(--foil-1),var(--foil-2));
+    -webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%;
+            mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%;
+  }
+  /* holographic sheen that follows the cursor */
   .pack-img::after{
-    content:"";position:absolute;inset:0;
-    background:radial-gradient(circle at 50% 120%, rgba(255,215,0,0.15), transparent 60%);
+    content:"";position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:overlay;
+    opacity:.35;transition:opacity .35s;
+    background:
+      radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.55),transparent 42%),
+      linear-gradient(115deg,transparent 15%,rgba(255,0,170,.28) 32%,rgba(0,255,255,.28) 48%,rgba(255,240,0,.28) 64%,transparent 82%);
+    background-size:100% 100%,220% 220%;
+    background-position:center,var(--mx) var(--my);
   }
-  .pack-img.whale-bg::after{background:radial-gradient(circle at 50% 120%, rgba(138,43,226,0.3), transparent 60%)}
-
-  .pack-seal{
-    width:90px;height:90px;border-radius:50%;background:#fff;
-    border:6px solid #111;position:relative;z-index:1;
-    box-shadow:0 10px 30px rgba(0,0,0,0.5);
-    transition:transform 0.4s var(--ease);
+  .pack-card:hover .pack-img::after{opacity:1}
+  .pack-art-img{
+    height:150px;width:auto;position:relative;z-index:1;border-radius:6px;
+    filter:drop-shadow(0 14px 24px rgba(0,0,0,0.55));
+    transition:transform 0.4s var(--ease);transform:translateZ(30px);
   }
-  .pack-card:hover .pack-seal{transform:scale(1.1) rotate(10deg)}
-  .pack-seal::before{content:"";position:absolute;left:-6px;right:-6px;top:calc(50% - 3px);height:6px;background:#111}
-  .pack-seal::after{content:"";position:absolute;inset:0;margin:auto;width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid #111}
-  .pack-card.whale .pack-seal{background:#111;border-color:#8a2be2}
-  .pack-card.whale .pack-seal::before{background:#8a2be2}
-  .pack-card.whale .pack-seal::after{background:#111;border-color:#8a2be2}
+  .pack-card:hover .pack-art-img{transform:translateZ(30px) scale(1.08) rotate(4deg)}
 
-  .pack-info{padding:24px}
-  .pack-name{font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:8px}
+  .pack-info{padding:24px;position:relative}
+  .pack-name{font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px}
   .pack-desc{font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.5}
-
-  .pack-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-  .pack-price{font-size:14px;color:var(--text-muted)}
-  .pack-price b{color:var(--text);font-size:18px;font-weight:700}
-  .pack-odds{font-size:12px;color:var(--gold);background:rgba(255,215,0,0.1);padding:4px 10px;border-radius:6px;font-weight:600}
+  .pack-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+  .pack-price{font-size:13px;color:var(--text-muted)}
+  .pack-price b{color:var(--text);font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.02em}
+  .pack-price small{display:block;font-size:11px;margin-top:2px}
+  .pack-odds{font-size:12px;color:var(--gold);background:var(--gold-soft);padding:4px 10px;border-radius:6px;font-weight:600;white-space:nowrap}
+  .pack-odds.blue{color:var(--blue);background:rgba(59,130,246,0.12)}
+  .pack-odds.red{color:var(--red);background:rgba(255,59,48,0.12)}
+  .pack-odds.purple{color:#b77bff;background:rgba(138,43,226,0.18)}
 
   .luck-meter{margin-bottom:20px}
-  .luck-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;font-weight:600}
+  .luck-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;font-weight:600}
+  .luck-label span:last-child{color:var(--text)}
   .luck-bar{height:6px;background:#1c1f2b;border-radius:99px;overflow:hidden}
-  .luck-fill{height:100%;background:linear-gradient(90deg, #ff3b30, #ffd700);border-radius:99px;width:20%;transition:width 0.5s}
+  .luck-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));border-radius:99px;box-shadow:0 0 12px rgba(255,215,0,.4)}
 
-  .pack-action{width:100%;padding:14px;border-radius:12px;background:var(--text);color:var(--bg);font-weight:700;font-size:15px;transition:all 0.2s}
-  .pack-card:hover .pack-action{background:var(--gold);color:#000}
+  .pack-action{width:100%;padding:14px;border-radius:12px;background:var(--text);color:var(--bg);font-weight:800;font-size:15px;transition:background 0.2s,color 0.2s,border-color 0.2s,box-shadow .3s}
+  .pack-card:hover .pack-action{background:var(--gold);color:#000;box-shadow:0 0 24px rgba(255,215,0,.35)}
+  .drawdown-badge{
+    display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;
+    font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  }
+  .drawdown-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
+
+  /* tier escalation */
+  .pack-card.t1{--foil-1:#b9c0cf;--foil-2:#4d5465}
+  .pack-card.t2{--foil-1:#4f8df5;--foil-2:#13305f;border-color:rgba(59,130,246,.28);box-shadow:0 0 40px -6px rgba(59,130,246,.28)}
+  .pack-card.t2:hover{border-color:rgba(59,130,246,.55);box-shadow:0 24px 50px rgba(0,0,0,.5),0 0 50px -4px rgba(59,130,246,.4)}
+  .pack-card.t3{
+    --foil-1:#ff5a4f;--foil-2:#4a0f0c;border:1.5px solid transparent;
+    background:
+      linear-gradient(var(--surface),var(--surface)) padding-box,
+      conic-gradient(from var(--angle),#ff3b30,transparent 25%,transparent 50%,#ff3b30 62%,transparent 85%,#ff3b30) border-box;
+    animation:borderSpin 5s linear infinite;
+  }
+  .pack-card.t3:hover{box-shadow:0 24px 50px rgba(0,0,0,.5),0 0 50px -4px rgba(255,59,48,.35)}
+  @keyframes borderSpin{to{--angle:360deg}}
+  .pack-card.whale{
+    --foil-1:#a259ff;--foil-2:#2a1142;border-color:#3b1d5a;
+    background:linear-gradient(110deg,#140a20 0%,#140a20 35%,#2a1446 50%,#140a20 65%,#140a20 100%);
+    background-size:300% 100%;animation:shimmer 7s ease-in-out infinite;
+    box-shadow:0 0 50px -8px rgba(138,43,226,.35);
+  }
+  @keyframes shimmer{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+  .pack-card.whale:hover{border-color:#6a35a8;box-shadow:0 24px 50px rgba(0,0,0,.5),0 0 60px -4px rgba(138,43,226,.5)}
   .pack-card.whale .pack-action{background:rgba(255,255,255,0.05);color:#fff;border:1px solid var(--border-bright)}
-  .pack-card.whale:hover .pack-action{background:#8a2be2;color:#fff;border-color:#8a2be2}
-
-  .drawdown-badge{font-size:11px;color:#30d158;font-weight:600;margin-top:12px;display:block;text-align:center;background:rgba(48,209,88,0.1);padding:6px;border-radius:6px;}
+  .pack-card.whale:hover .pack-action{background:var(--purple);color:#fff;border-color:var(--purple);box-shadow:0 0 24px rgba(138,43,226,.5)}
+  .pack-card.whale .pack-meta{border-color:#2a1a40}
 
   /* ============ HOW IT WORKS ============ */
-  .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px;margin-top:40px}
-  .how-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
-  .how-num{font-family:var(--font-display);font-size:48px;font-weight:700;color:var(--border-bright);position:absolute;top:20px;right:24px;opacity:0.5}
-  .how-card h3{font-size:20px;margin-bottom:12px;font-weight:700}
-  .how-card p{font-size:14px;color:var(--text-muted);line-height:1.6}
-  .how-card span.highlight{color:var(--gold);font-weight:700}
+  .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:28px;margin-top:40px;position:relative;isolation:isolate}
+  .how-card{background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--border);border-radius:20px;padding:32px;position:relative;transition:border-color .3s,transform .3s var(--ease),opacity .8s var(--ease) var(--d,0s),translate .8s var(--ease) var(--d,0s)}
+  .how-card:hover{border-color:rgba(255,215,0,.3);transform:translateY(-4px)}
+  .how-num{
+    display:block;font-family:var(--font-display);font-size:72px;font-weight:700;line-height:1;letter-spacing:-0.04em;
+    color:transparent;-webkit-text-stroke:1.5px rgba(255,215,0,.65);margin-bottom:20px;position:relative;
+    transition:color .3s;
+  }
+  .how-card:hover .how-num{color:rgba(255,215,0,.12)}
+  .how-card h3{font-family:var(--font-display);font-size:22px;letter-spacing:-0.02em;margin-bottom:12px;font-weight:700}
+  .how-card p{font-size:14px;color:var(--text-muted);line-height:1.65}
+  .how-card span.highlight{color:var(--gold);font-weight:600}
+  @media (min-width:1100px){
+    .how-grid{grid-template-columns:repeat(4,1fr)}
+    .how-grid::before{
+      content:"";position:absolute;left:4%;right:4%;top:68px;height:1px;z-index:-1;
+      background:linear-gradient(90deg,transparent,rgba(255,215,0,.45) 15%,rgba(255,215,0,.45) 85%,transparent);
+    }
+    .how-card::after{
+      content:"";position:absolute;right:-19px;top:63px;width:10px;height:10px;border-radius:50%;
+      background:var(--gold);box-shadow:0 0 12px var(--gold);
+    }
+    .how-card:last-child::after{display:none}
+  }
+
+  /* ============ FINAL CTA ============ */
+  .cta-strip{max-width:1280px;margin:0 auto 96px;padding:0 24px}
+  .cta-inner{
+    position:relative;overflow:hidden;border-radius:28px;padding:72px 32px;text-align:center;
+    background:
+      radial-gradient(circle at 50% 0%,rgba(255,255,255,.35),transparent 55%),
+      linear-gradient(135deg,var(--gold) 0%,var(--gold-2) 60%,var(--gold-dark) 100%);
+    color:#000;box-shadow:0 30px 80px -20px rgba(255,215,0,.35);
+  }
+  .cta-inner .cta-ball{position:absolute;right:-120px;top:50%;width:420px;aspect-ratio:1;translate:0 -50%;animation:spin 80s linear infinite;pointer-events:none}
+  .cta-inner .cta-ball *{fill:none;stroke:rgba(0,0,0,.12);stroke-width:1.2}
+  .cta-inner h2{font-family:var(--font-display);font-size:clamp(34px,5.5vw,64px);letter-spacing:-0.04em;line-height:1;margin-bottom:16px;position:relative}
+  .cta-inner p{font-size:17px;color:rgba(0,0,0,.7);margin-bottom:32px;position:relative}
+  .cta-inner .hero-cta{margin-bottom:0;position:relative}
+  .btn-dark{background:#050508;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+  .btn-dark:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.45)}
+  .btn-outline-dark{border:1.5px solid rgba(0,0,0,.6);color:#000;font-weight:800}
+  .btn-outline-dark:hover{background:rgba(0,0,0,.08);transform:translateY(-2px)}
 
   /* ============ GATE MODAL ============ */
   .modal-overlay{
-    position:fixed;inset:0;background:rgba(5,5,8,0.9);backdrop-filter:blur(10px);
-    z-index:1000;display:none;place-items:center;padding:24px;
+    position:fixed;inset:0;background:rgba(5,5,8,0.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    z-index:1000;display:none;place-items:center;padding:24px;perspective:1200px;
   }
   .modal-overlay.active{display:grid}
   .modal-content{
     background:var(--surface);border:1px solid var(--border-bright);
     border-radius:24px;width:100%;max-width:460px;position:relative;
-    overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.8);
-    animation:modalIn 0.4s var(--ease);
+    overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.8),0 0 0 1px rgba(255,215,0,.06);
+    animation:modalIn 0.6s var(--ease);
   }
-  @keyframes modalIn{from{transform:scale(0.95) translateY(10px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-
+  .modal-content::after{
+    content:"";position:absolute;inset:0;z-index:3;pointer-events:none;transform:translateX(-120%);
+    background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.12) 50%,transparent 65%);
+    animation:shine 1.1s var(--ease) .15s;
+  }
+  @keyframes modalIn{from{transform:rotateX(18deg) scale(.94) translateY(16px);opacity:0}to{transform:none;opacity:1}}
+  @keyframes shine{to{transform:translateX(120%)}}
   .modal-bg-anim{
     position:absolute;top:-50%;left:-50%;width:200%;height:200%;
     background:conic-gradient(from 0deg, transparent, rgba(255,215,0,0.15), transparent 25%);
     animation:rotateBg 3s linear infinite;pointer-events:none;
   }
   @keyframes rotateBg{100%{transform:rotate(360deg)}}
-
   .modal-inner{position:relative;padding:48px 32px;text-align:center;z-index:1}
   .modal-icon{
-    width:64px;height:64px;border-radius:50%;background:rgba(255,215,0,0.1);
+    width:64px;height:64px;border-radius:50%;background:var(--gold-soft);
     display:grid;place-items:center;margin:0 auto 24px;border:1px solid rgba(255,215,0,0.2);
     animation:pulse 2s infinite;
   }
   .modal-icon svg{width:32px;height:32px;fill:var(--gold)}
-  .modal-content h3{font-family:var(--font-display);font-size:24px;margin-bottom:12px}
+  .modal-content h3{font-family:var(--font-display);font-size:26px;letter-spacing:-0.02em;margin-bottom:12px}
   .modal-content p{color:var(--text-muted);font-size:14px;line-height:1.5;margin-bottom:24px}
   .modal-content .fomo-text{font-size:12px;color:var(--gold);background:rgba(255,215,0,0.05);padding:8px 12px;border-radius:8px;display:inline-block;margin-bottom:24px;font-weight:600}
-
   .input-group{position:relative;margin-bottom:16px;text-align:left}
-  .input-group label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em}
+  .input-group label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em}
   .input-group input{
     width:100%;background:#050508;border:1px solid var(--border);
     padding:16px;border-radius:12px;color:var(--text);font-family:var(--font-sans);
-    font-size:15px;transition:border-color 0.2s;outline:none;
+    font-size:15px;transition:border-color 0.2s,box-shadow .2s;outline:none;
   }
-  .input-group input:focus{border-color:var(--gold)}
-
+  .input-group input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,215,0,.1)}
+  .input-group input.invalid{border-color:var(--red);box-shadow:0 0 0 4px rgba(255,59,48,.1)}
   .console-log{
     background:#000;border:1px solid var(--border);border-radius:8px;
     padding:0 12px;text-align:left;font-family:monospace;font-size:11px;
-    color:#30d158;margin-bottom:0;line-height:1.6;height:0;overflow:hidden;
-    transition:all 0.3s var(--ease);opacity:0;
+    color:#e8c95a;margin-bottom:0;line-height:1.6;max-height:0;overflow:hidden;
+    transition:max-height 0.3s var(--ease),padding 0.3s var(--ease),margin 0.3s var(--ease),opacity 0.3s var(--ease);opacity:0;
   }
-  .console-log.active{height:80px;padding:12px;margin-bottom:24px;opacity:1;border:1px solid var(--border);}
-
+  .console-log.active{max-height:96px;padding:12px;margin-bottom:24px;opacity:1}
+  .console-log .err{color:var(--red)}
   .modal-btn{
     width:100%;padding:16px;border-radius:12px;
-    background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-    color:#000;font-weight:700;font-size:16px;transition:all 0.2s;
+    background:linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 55%, var(--gold-dark) 100%);
+    color:#000;font-weight:800;font-size:16px;transition:transform 0.2s,box-shadow 0.3s,opacity 0.2s;
   }
-  .modal-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,215,0,0.3)}
-
+  .modal-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,215,0,0.4)}
+  .modal-btn:disabled{opacity:0.7;cursor:default}
+  .modal-btn.failed{background:var(--red);color:#fff;opacity:1}
   .modal-close{
     position:absolute;top:16px;right:16px;width:32px;height:32px;
     border-radius:50%;background:rgba(255,255,255,0.05);color:var(--text-muted);
-    display:grid;place-items:center;font-size:20px;transition:all 0.2s;z-index:2;
+    display:grid;place-items:center;font-size:20px;transition:background 0.2s,color 0.2s;z-index:4;
   }
   .modal-close:hover{background:rgba(255,255,255,0.1);color:var(--text)}
 
   /* ============ CHAT WIDGET ============ */
   .chat-widget{
     position:fixed;bottom:24px;right:24px;z-index:900;
-    width:48px;height:48px;border-radius:50%;background:var(--gold);
+    width:52px;height:52px;border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),var(--gold-2));
     display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 24px rgba(255,215,0,0.3);
-    transition:transform 0.2s;
+    transition:transform 0.2s var(--ease),box-shadow .3s;
   }
-  .chat-widget:hover{transform:scale(1.1)}
+  .chat-widget:hover{transform:scale(1.08);box-shadow:0 0 0 6px rgba(255,215,0,.12),0 10px 30px rgba(255,215,0,.45)}
   .chat-widget svg{width:24px;height:24px;fill:#000}
   .chat-popup{
-    position:fixed;bottom:84px;right:24px;z-index:900;
-    width:320px;background:var(--surface);border:1px solid var(--border-bright);
+    position:fixed;bottom:88px;right:24px;z-index:900;
+    width:min(320px,calc(100vw - 48px));background:var(--surface);border:1px solid var(--border-bright);
     border-radius:16px;display:none;overflow:hidden;
-    box-shadow:0 20px 40px rgba(0,0,0,0.6);animation:modalIn 0.3s var(--ease);
+    box-shadow:0 20px 40px rgba(0,0,0,0.6);animation:modalIn 0.4s var(--ease);
   }
   .chat-popup.active{display:block}
-  .chat-head{background:var(--gold);color:#000;padding:12px 16px;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
-  .chat-head span{cursor:pointer;font-size:20px;line-height:1}
+  .chat-head{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000;padding:12px 16px;font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+  .chat-head button{font-size:20px;line-height:1;color:#000}
   .chat-body{padding:16px;height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
-  .msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.4}
+  .msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.4;overflow-wrap:anywhere}
   .msg.user{align-self:flex-end;background:rgba(255,255,255,0.1);color:var(--text);border-bottom-right-radius:4px}
-  .msg.support{align-self:flex-start;background:rgba(255,215,0,0.1);color:var(--text);border-bottom-left-radius:4px;border:1px solid rgba(255,215,0,0.2)}
+  .msg.support{align-self:flex-start;background:var(--gold-soft);color:var(--text);border-bottom-left-radius:4px;border:1px solid rgba(255,215,0,0.2)}
   .chat-input{display:flex;border-top:1px solid var(--border);padding:12px}
-  .chat-input input{flex:1;background:none;border:none;color:#fff;font-size:13px;outline:none}
-  .chat-input button{color:var(--gold);font-weight:700;font-size:13px;padding-left:12px}
-
-  /* ============ FOMO TOAST ============ */
-  .fomo-toast{
-    position:fixed;bottom:24px;left:24px;z-index:900;
-    background:var(--surface);border:1px solid var(--border-bright);
-    padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.5);transform:translateX(-120%);
-    transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
-  }
-  .fomo-toast.active{transform:translateX(0)}
-  .fomo-icon{width:32px;height:32px;border-radius:50%;background:rgba(255,59,48,0.15);display:grid;place-items:center;color:var(--red);font-size:16px}
-  .fomo-text-sm{font-size:12px;color:var(--text-muted);font-weight:500}
-  .fomo-text-sm b{color:var(--text);font-weight:700}
-  .fomo-val{font-size:11px;color:var(--gold);font-weight:700;margin-top:2px}
+  .chat-input input{flex:1;min-width:0;background:none;border:none;color:#fff;font-size:13px;outline:none}
+  .chat-input button{color:var(--gold);font-weight:800;font-size:13px;padding-left:12px}
 
   /* ============ FOOTER ============ */
-  footer{border-top:1px solid var(--border);padding:48px 24px;background:#050508}
+  footer{border-top:1px solid var(--border);padding:48px 24px;background:#050508;position:relative}
   .footer-content{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+  .footer-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
   .footer-legal{color:#5c6070;font-size:11px;line-height:1.8;border-top:1px solid var(--border);padding-top:24px;margin-top:8px}
   .footer-legal p{margin-bottom:12px}
-  .footer-badges{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
-  .footer-badge{border:1px solid var(--border);padding:8px 12px;border-radius:8px;font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+  .footer-badges{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .footer-badge{border:1px solid var(--border);padding:8px 12px;border-radius:8px;font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+
+  /* ============ SCROLL REVEAL ============ */
+  .js .reveal{opacity:0;translate:0 28px}
+  .js .reveal.in{opacity:1;translate:0 0}
+  .js .reveal:not(.pack-card):not(.how-card){transition:opacity .8s var(--ease) var(--d,0s),translate .8s var(--ease) var(--d,0s)}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:860px){
+    .nav-links a{display:none}
+    .nav-links{gap:0}
+  }
+  @media (max-width:560px){
+    :root{--header-h:64px}
+    .nav{padding:0 16px;gap:8px}
+    .logo{font-size:18px;gap:8px}
+    .nav-tier{margin-right:0;padding:6px 10px}
+    .nav-tier .bar{display:none}
+    .nav .btn{padding:10px 14px;font-size:13px}
+    .hero{padding:64px 16px}
+    .section{padding:56px 16px 64px}
+    .stat-box{min-width:0;width:100%}
+    .how-card{padding:24px}
+    .how-num{font-size:56px}
+    .modal-inner{padding:40px 20px}
+    .cta-strip{padding:0 16px;margin-bottom:64px}
+    .cta-inner{padding:56px 20px}
+    .chat-widget{bottom:16px;right:16px}
+    .chat-popup{right:16px;bottom:80px;width:calc(100vw - 32px)}
+  }
+  @media (max-width:380px){ .nav .btn{display:none} }
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
+    .js .reveal{opacity:1;translate:none}
+  }
 </style>
+<noscript><style>#intro{display:none}</style></noscript>
 </head>
-<body>
+<body class="locked">
 
 <div class="ambient"></div>
+<div class="grain"></div>
 
 <!-- INTRO (15s wait) -->
-<div id="intro">
+<div id="intro" role="status" aria-live="polite">
   <div class="intro-ball-wrap"><div class="intro-ball"></div></div>
   <div class="intro-loader">
     <div class="intro-text" id="introText">CALCULATING LUCK MULTIPLIERS...</div>
@@ -377,66 +523,78 @@
 <!-- NAV -->
 <header>
   <div class="nav">
-    <div class="logo"><div class="logo-icon"></div>PokéLuck</div>
+    <a href="#top" class="logo"><div class="logo-icon"></div>PokéLuck</a>
     <nav class="nav-links">
-      <a href="#" class="active">Packs</a>
-      <a href="#">$POKELUCK</a>
-      <a href="#how">How it Works</a>
-
-      <div class="nav-tier" onclick="openGateModal()">
+      <a href="#packs" class="active" data-section="packs">Packs</a>
+      <a href="#top" data-section="top">$POKELUCK</a>
+      <a href="#how" data-section="how">How it Works</a>
+      <button type="button" class="nav-tier" data-open-gate aria-label="View your holder tier">
         <span>Tier 2</span>
         <div class="bar"><div></div></div>
-      </div>
+      </button>
     </nav>
-    <button class="btn btn-gold" onclick="window.location.href='#'">Buy $POKELUCK</button>
+    <button type="button" class="btn btn-gold" data-buy>Buy $POKELUCK</button>
   </div>
 </header>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="badge"><span class="badge-dot"></span>Live & Verified</div>
-  <h1>Hold Tokens.<br><span>Boost Luck.</span></h1>
-  <p>The exclusive token-gated pack casino. The more $POKELUCK you hold, the higher your multiplier. Reduced risk, more rewards.</p>
-  <div style="display:flex;gap:16px;justify-content:center;margin-bottom:64px">
-    <button class="btn btn-primary" style="padding:16px 32px;font-size:16px" onclick="document.getElementById('packs').scrollIntoView({behavior:'smooth'})">View Packs</button>
-    <button class="btn btn-gold" style="padding:16px 32px;font-size:16px" onclick="window.location.href='#'">Buy $POKELUCK</button>
+<div class="hero-shell">
+  <div class="hero-ball-fade" aria-hidden="true">
+    <svg class="hero-ball" viewBox="0 0 200 200">
+      <path class="gold" d="M4 100a96 96 0 0 1 192 0"/>
+      <path class="line" d="M196 100a96 96 0 0 1-192 0"/>
+      <path class="line" d="M4 100h68M128 100h68"/>
+      <circle class="line" cx="100" cy="100" r="28"/>
+      <circle class="gold" cx="100" cy="100" r="14"/>
+      <circle class="line" cx="100" cy="100" r="84"/>
+    </svg>
   </div>
+  <section class="hero" id="top">
+    <div class="badge reveal"><span class="badge-dot"></span>Live & Verified</div>
+    <h1 class="reveal">Hold Tokens.<br><span>Boost Luck.</span></h1>
+    <p class="reveal">The exclusive token-gated pack casino. The more $POKELUCK you hold, the higher your multiplier. Reduced risk, more rewards.</p>
+    <div class="hero-cta reveal">
+      <a href="#packs" class="btn btn-primary btn-lg">View Packs</a>
+      <button type="button" class="btn btn-gold btn-lg" data-buy>Buy $POKELUCK</button>
+    </div>
 
-  <div class="hero-stats">
-    <div class="stat-box">
-      <div class="stat-val">3.0%</div>
-      <div class="stat-label">Max Drawdown</div>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:8px">Pack floor guaranteed</div>
+    <div class="hero-stats" data-stagger>
+      <div class="stat-box reveal">
+        <div class="stat-val">3.0%</div>
+        <div class="stat-label">Max Drawdown</div>
+        <div class="stat-note">Pack floor guaranteed</div>
+      </div>
+      <div class="stat-box reveal">
+        <div class="stat-val gold">4000%+</div>
+        <div class="stat-label">Max Upside</div>
+        <div class="stat-note">Grail pull ceiling</div>
+      </div>
+      <div class="stat-box reveal">
+        <div class="stat-val gold-soft">x100</div>
+        <div class="stat-label">Luck Multiplier</div>
+        <div class="stat-note">At max token tier</div>
+      </div>
     </div>
-    <div class="stat-box">
-      <div class="stat-val gold">4000%+</div>
-      <div class="stat-label">Max Upside</div>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:8px">Grail pull ceiling</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-val blue">x100</div>
-      <div class="stat-label">Luck Multiplier</div>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:8px">At max token tier</div>
-    </div>
-  </div>
-</section>
+  </section>
+</div>
 
 <!-- PACKS -->
 <section id="packs" class="section">
-  <div class="section-head">
+  <div class="section-head reveal">
     <h2>Token-Gated Drops</h2>
     <p>Your $POKELUCK balance determines your pack luck. Open your first pack to start earning.</p>
     <div class="countdown-wrap">
-      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
       <span>Current Luck Boost expires in <span id="countdownText">04:23:11</span></span>
     </div>
   </div>
 
-  <div class="pack-grid">
-    <!-- Pack 1 -->
-    <div class="pack-card" onclick="openGateModal()">
+  <!-- Entry costs are set against a 1,000,000,000 $POKELUCK total supply -->
+  <div class="pack-grid" data-stagger>
+    <!-- Pack 1: 0.5% of supply -->
+    <div class="pack-card t1 reveal" data-open-gate>
       <div class="pack-img">
-        <img src="https://images.pokemontcg.io/base1/58_hires.png" alt="Pikachu" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+        <img src="https://images.pokemontcg.io/base1/58_hires.png" alt="Pikachu" class="pack-art-img" width="107" height="150" loading="lazy" decoding="async">
       </div>
       <div class="pack-info">
         <div class="pack-name">Starter Pack</div>
@@ -446,17 +604,17 @@
           <div class="luck-bar"><div class="luck-fill" style="width:25%"></div></div>
         </div>
         <div class="pack-meta">
-          <div class="pack-price">Entry: <b>500 $PL</b></div>
+          <div class="pack-price">Entry: <b>5M $PL</b><small>0.5% of supply</small></div>
           <div class="pack-odds">Low Risk</div>
         </div>
-        <button class="pack-action">Verify Wallet & Open</button>
+        <button type="button" class="pack-action">Verify Wallet & Open</button>
         <div class="drawdown-badge">Max 3% Drawdown</div>
       </div>
     </div>
-    <!-- Pack 2 -->
-    <div class="pack-card" onclick="openGateModal()">
+    <!-- Pack 2: 1% of supply -->
+    <div class="pack-card t2 reveal" data-open-gate>
       <div class="pack-img">
-        <img src="https://images.pokemontcg.io/base1/2_hires.png" alt="Blastoise" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+        <img src="https://images.pokemontcg.io/base1/2_hires.png" alt="Blastoise" class="pack-art-img" width="107" height="150" loading="lazy" decoding="async">
       </div>
       <div class="pack-info">
         <div class="pack-name">Legendary Series</div>
@@ -466,17 +624,17 @@
           <div class="luck-bar"><div class="luck-fill" style="width:55%"></div></div>
         </div>
         <div class="pack-meta">
-          <div class="pack-price">Entry: <b>2,500 $PL</b></div>
-          <div class="pack-odds" style="color:var(--blue);background:rgba(0,122,255,0.1)">High Yield</div>
+          <div class="pack-price">Entry: <b>10M $PL</b><small>1% of supply</small></div>
+          <div class="pack-odds blue">High Yield</div>
         </div>
-        <button class="pack-action">Verify Wallet & Open</button>
+        <button type="button" class="pack-action">Verify Wallet & Open</button>
         <div class="drawdown-badge">Max 3% Drawdown</div>
       </div>
     </div>
-    <!-- Pack 3 -->
-    <div class="pack-card" onclick="openGateModal()">
+    <!-- Pack 3: 3% of supply -->
+    <div class="pack-card t3 reveal" data-open-gate>
       <div class="pack-img">
-        <img src="https://images.pokemontcg.io/base1/10_hires.png" alt="Mewtwo" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+        <img src="https://images.pokemontcg.io/base1/10_hires.png" alt="Mewtwo" class="pack-art-img" width="107" height="150" loading="lazy" decoding="async">
       </div>
       <div class="pack-info">
         <div class="pack-name">High Roller Pulls</div>
@@ -486,30 +644,30 @@
           <div class="luck-bar"><div class="luck-fill" style="width:90%"></div></div>
         </div>
         <div class="pack-meta">
-          <div class="pack-price">Entry: <b>10,000 $PL</b></div>
-          <div class="pack-odds" style="color:var(--red);background:rgba(255,59,48,0.1)">Extreme</div>
+          <div class="pack-price">Entry: <b>30M $PL</b><small>3% of supply</small></div>
+          <div class="pack-odds red">Extreme</div>
         </div>
-        <button class="pack-action">Verify Wallet & Open</button>
+        <button type="button" class="pack-action">Verify Wallet & Open</button>
         <div class="drawdown-badge">Max 3% Drawdown</div>
       </div>
     </div>
-    <!-- Pack 4: Whale Vault -->
-    <div class="pack-card whale" onclick="openGateModal()">
-      <div class="pack-img whale-bg">
-        <img src="https://images.pokemontcg.io/base1/4_hires.png" alt="Charizard" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+    <!-- Pack 4: Whale Vault, 5% of supply -->
+    <div class="pack-card whale reveal" data-open-gate>
+      <div class="pack-img">
+        <img src="https://images.pokemontcg.io/base1/4_hires.png" alt="Charizard" class="pack-art-img" width="107" height="150" loading="lazy" decoding="async">
       </div>
       <div class="pack-info">
         <div class="pack-name">Whale Vault</div>
-        <div class="pack-desc">Access Denied. Requires Tier 5 holding (100k+ $PL).</div>
+        <div class="pack-desc">Access Denied. Requires Tier 5 holding (50M+ $PL).</div>
         <div class="luck-meter">
           <div class="luck-label"><span>Luck Boost</span><span>+5000%</span></div>
           <div class="luck-bar"><div class="luck-fill" style="width:100%"></div></div>
         </div>
         <div class="pack-meta">
-          <div class="pack-price">Entry: <b>50,000 $PL</b></div>
-          <div class="pack-odds" style="color:#8a2be2;background:rgba(138,43,226,0.15)">Insane</div>
+          <div class="pack-price">Entry: <b>50M $PL</b><small>5% of supply</small></div>
+          <div class="pack-odds purple">Insane</div>
         </div>
-        <button class="pack-action">Verify Wallet & Open</button>
+        <button type="button" class="pack-action">Verify Wallet & Open</button>
         <div class="drawdown-badge">Max 3% Drawdown</div>
       </div>
     </div>
@@ -518,91 +676,92 @@
 
 <!-- HOW IT WORKS -->
 <section id="how" class="section" style="padding-top:0">
-  <div class="section-head">
+  <div class="section-head reveal">
     <h2>How It Works</h2>
     <p>The mechanics of guaranteed edge.</p>
   </div>
-  <div class="how-grid">
-    <div class="how-card">
-      <div class="how-num">01</div>
+  <div class="how-grid" data-stagger>
+    <div class="how-card reveal">
+      <span class="how-num">01</span>
       <h3>Acquire $POKELUCK</h3>
       <p>Buy the token on any DEX. Your wallet balance is instantly indexed by the protocol to determine your <span class="highlight">Luck Tier</span>.</p>
     </div>
-    <div class="how-card">
-      <div class="how-num">02</div>
+    <div class="how-card reveal">
+      <span class="how-num">02</span>
       <h3>Hold & Multiply</h3>
       <p>The more you hold, the higher your <span class="highlight">Luck Multiplier</span> gets. This directly inflates the EV of every pack you open.</p>
     </div>
-    <div class="how-card">
-      <div class="how-num">03</div>
+    <div class="how-card reveal">
+      <span class="how-num">03</span>
       <h3>The 3% Floor</h3>
       <p>Every pack draws from our algorithmic pricing model. The draw value is hard-capped at a <span class="highlight">maximum 3% drawdown</span> from entry.</p>
     </div>
-    <div class="how-card">
-      <div class="how-num">04</div>
+    <div class="how-card reveal">
+      <span class="how-num">04</span>
       <h3>The 4000% Ceiling</h3>
       <p>Grail pulls scale dynamically based on your multiplier. Max tier holders access up to <span class="highlight">4000%+ potential upside</span> on any pull.</p>
     </div>
   </div>
 </section>
 
-<!-- GATE MODAL -->
-<div class="modal-overlay" id="gateModal">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeGateModal()">×</button>
-    <div class="modal-bg-anim"></div>
+<!-- FINAL CTA -->
+<section class="cta-strip">
+  <div class="cta-inner reveal">
+    <svg class="cta-ball" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="96"/><path d="M4 100h68M128 100h68"/><circle cx="100" cy="100" r="28"/><circle cx="100" cy="100" r="14"/>
+    </svg>
+    <h2>Open your first pack.</h2>
+    <p>Your $POKELUCK balance determines your pack luck.</p>
+    <div class="hero-cta">
+      <a href="#packs" class="btn btn-dark btn-lg">View Packs</a>
+      <button type="button" class="btn btn-outline-dark btn-lg" data-buy>Buy $POKELUCK</button>
+    </div>
+  </div>
+</section>
 
+<!-- GATE MODAL -->
+<div class="modal-overlay" id="gateModal" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="modal-content">
+    <button type="button" class="modal-close" id="gateClose" aria-label="Close">×</button>
+    <div class="modal-bg-anim"></div>
     <div class="modal-inner">
       <div class="modal-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
       </div>
-      <h3>Connect to Verify</h3>
-      <p>To unlock pack opening, please connect the wallet containing your $POKELUCK tokens.</p>
-
+      <h3 id="gateTitle">Connect to Verify</h3>
+      <p>To unlock pack opening, please connect the Solana wallet containing your $POKELUCK tokens.</p>
       <div class="fomo-text">Hold more tokens to boost your luck multiplier</div>
-
-      <div class="input-group">
-        <label>Wallet Address</label>
-        <input type="text" placeholder="0x..." id="walletInput">
-      </div>
-
-      <div class="console-log" id="consoleLog">
-        <div id="logText"></div>
-      </div>
-
-      <button class="modal-btn" onclick="handleVerify()">Verify Wallet</button>
+      <form id="gateForm" novalidate>
+        <div class="input-group">
+          <label for="walletInput">Solana Wallet Address</label>
+          <input type="text" placeholder="e.g. 7xKX…9fQ2" id="walletInput" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="44">
+        </div>
+        <div class="console-log" id="consoleLog" aria-live="polite"></div>
+        <button type="submit" class="modal-btn" id="verifyBtn">Verify Wallet</button>
+      </form>
     </div>
   </div>
 </div>
 
 <!-- CHAT WIDGET -->
-<div class="chat-widget" onclick="toggleChat()">
-  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-</div>
+<button type="button" class="chat-widget" id="chatToggle" aria-label="Open support chat" aria-expanded="false" aria-controls="chatPopup">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+</button>
 <div class="chat-popup" id="chatPopup">
-  <div class="chat-head">Support <span onclick="toggleChat()">×</span></div>
+  <div class="chat-head">Support <button type="button" id="chatClose" aria-label="Close chat">×</button></div>
   <div class="chat-body" id="chatBody">
     <div class="msg user">how do i open packs?</div>
     <div class="msg support">Hi! To open packs, you need to hold $POKELUCK in your wallet. Packs are currently locked for non-holders.</div>
   </div>
-  <div class="chat-input">
-    <input type="text" placeholder="Type a message..." onkeypress="handleChatInput(event)">
-    <button onclick="handleChatSend()">Send</button>
-  </div>
-</div>
-
-<!-- FOMO TOAST -->
-<div class="fomo-toast" id="fomoToast">
-  <div class="fomo-icon">🔥</div>
-  <div>
-    <div class="fomo-text-sm"><b id="fomoUser">0x4a...9f2</b> just pulled a GRAIL!</div>
-    <div class="fomo-val" id="fomoVal">15,500 $PL</div>
-  </div>
+  <form class="chat-input" id="chatForm">
+    <input type="text" placeholder="Type a message..." id="chatInput" autocomplete="off" aria-label="Message">
+    <button type="submit">Send</button>
+  </form>
 </div>
 
 <footer>
   <div class="footer-content">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+    <div class="footer-top">
       <div class="logo"><div class="logo-icon"></div>PokéLuck</div>
       <div class="footer-badges">
         <span class="footer-badge">Provably Fair</span>
@@ -610,7 +769,6 @@
         <span class="footer-badge">18+</span>
       </div>
     </div>
-
     <div class="footer-legal">
       <p>PokéLuck is a token-gated digital asset platform. All pack openings, token swaps, and gameplay mechanics involve digital assets and carry financial risk. You may lose all funds deposited into the platform. $POKELUCK is a utility token and does not constitute a security, share, or equity in any entity. Pack values are denominated in $POKELUCK and are subject to market volatility. The "3% floor" applies strictly to the algorithmic draw resolution and does not guarantee fiat-denominated value preservation.</p>
       <p>By using this platform, you confirm you are at least 18 years of age and legally permitted to participate in digital asset trading in your jurisdiction. This platform is not available to residents of restricted territories, including but not limited to the United States, United Kingdom, and Australia. PokéLuck is a parody brand and is not affiliated with, endorsed by, or sponsored by Nintendo, Game Freak, or The Pokémon Company. All external Pokémon IP remains the property of its respective owners.</p>
@@ -620,16 +778,18 @@
 </footer>
 
 <script>
-  /* --- HOVER IMAGE ANIMATION INJECTION --- */
-  document.querySelectorAll('.pack-card').forEach(card => {
-    const img = card.querySelector('.pack-art-img');
-    if(img){
-      card.addEventListener('mouseenter', () => img.style.transform = 'scale(1.1) rotate(5deg)');
-      card.addEventListener('mouseleave', () => img.style.transform = 'scale(1) rotate(0deg)');
-    }
-  });
+(() => {
+  'use strict';
 
-  /* --- INTRO LOGIC --- */
+  /* --- CONFIG --- */
+  // Paste your DEX / buy link here (e.g. a Jupiter or Raydium swap URL). Empty = buttons do nothing.
+  const BUY_URL = '';
+  const INTRO_DURATION = 15000;
+
+  const $ = (id) => document.getElementById(id);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- INTRO --- */
   const introTexts = [
     "CALCULATING LUCK MULTIPLIERS...",
     "INDEXING HOLDER TIERS...",
@@ -638,36 +798,104 @@
     "SYNCING DEX LIQUIDITY...",
     "READY."
   ];
+  const intro = $('intro');
+  const textEl = $('introText');
+  const barEl = $('introBar');
+  const stepMs = INTRO_DURATION / introTexts.length;
   let introIdx = 0;
-  const textEl = document.getElementById('introText');
-  const barEl = document.getElementById('introBar');
-  const INTRO_DURATION = 15000;
-  const startTime = Date.now();
+  let introStart = null;
 
-  const introInterval = setInterval(() => {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min((elapsed / INTRO_DURATION) * 100, 100);
-    barEl.style.width = progress + '%';
+  function setIntroText(i) {
+    introIdx = i;
+    textEl.style.opacity = 0;
+    setTimeout(() => {
+      textEl.textContent = introTexts[i];
+      textEl.style.opacity = 1;
+    }, 200);
+  }
 
-    const newIdx = Math.floor(elapsed / 2500) % introTexts.length;
-    if (newIdx !== introIdx) {
-      introIdx = newIdx;
-      textEl.style.opacity = 0;
-      setTimeout(() => {
-        textEl.innerText = introTexts[introIdx];
-        textEl.style.opacity = 1;
-      }, 200);
+  function finishIntro() {
+    if (intro.classList.contains('done')) return;
+    barEl.style.transform = 'scaleX(1)';
+    intro.classList.add('done');
+    document.body.classList.remove('locked');
+    setTimeout(() => { intro.style.display = 'none'; }, 1000);
+    startReveal();
+  }
+
+  function introFrame(now) {
+    if (introStart === null) introStart = now;
+    const elapsed = now - introStart;
+    const progress = Math.min(elapsed / INTRO_DURATION, 1);
+    barEl.style.transform = `scaleX(${progress})`;
+    // Clamp so the last message ("READY.") stays up instead of wrapping back to the first
+    const idx = Math.min(Math.floor(elapsed / stepMs), introTexts.length - 1);
+    if (idx !== introIdx) setIntroText(idx);
+    if (progress < 1 && !intro.classList.contains('done')) requestAnimationFrame(introFrame);
+    else finishIntro();
+  }
+  requestAnimationFrame(introFrame);
+  // Animation frames pause in background tabs; this timer guarantees the intro still ends on time
+  setTimeout(finishIntro, INTRO_DURATION + 100);
+
+  /* --- SCROLL REVEAL (starts once the intro has faded) --- */
+  document.querySelectorAll('[data-stagger]').forEach(group => {
+    [...group.children].forEach((el, i) => el.style.setProperty('--d', `${i * 90}ms`));
+  });
+  function startReveal() {
+    const items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window) || reduceMotion) {
+      items.forEach(el => el.classList.add('in'));
+      return;
     }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    items.forEach(el => io.observe(el));
+  }
 
-    if (progress >= 100) {
-      clearInterval(introInterval);
-      document.getElementById('intro').classList.add('done');
-      document.body.style.overflow = '';
-    }
-  }, 50);
-  document.body.style.overflow = 'hidden';
+  /* --- PACK TILT + HOLO SHEEN (mouse only) --- */
+  if (!reduceMotion) {
+    document.querySelectorAll('.pack-card').forEach(card => {
+      card.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        card.style.setProperty('--rx', `${(0.5 - y) * 9}deg`);
+        card.style.setProperty('--ry', `${(x - 0.5) * 11}deg`);
+        card.style.setProperty('--mx', `${x * 100}%`);
+        card.style.setProperty('--my', `${y * 100}%`);
+      });
+      card.addEventListener('pointerleave', () => {
+        ['--rx', '--ry', '--mx', '--my'].forEach(p => card.style.removeProperty(p));
+      });
+    });
+  }
+
+  /* --- NAV: active link follows the section in view --- */
+  const navLinks = document.querySelectorAll('.nav-links a[data-section]');
+  const setActive = (id) => navLinks.forEach(a => a.classList.toggle('active', a.dataset.section === id));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    ['top', 'packs', 'how'].forEach(id => { const el = $(id); if (el) observer.observe(el); });
+  }
+
+  /* --- BUY BUTTONS --- */
+  document.querySelectorAll('[data-buy]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (BUY_URL) window.open(BUY_URL, '_blank', 'noopener');
+    });
+  });
 
   /* --- COUNTDOWN TIMER --- */
+  const countdownEl = $('countdownText');
   let timeLeft = 4 * 3600 + 23 * 60 + 11; // 04:23:11 in seconds
   setInterval(() => {
     if (timeLeft <= 0) timeLeft = 12 * 3600; // reset to 12h
@@ -675,120 +903,145 @@
     const h = String(Math.floor(timeLeft / 3600)).padStart(2, '0');
     const m = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, '0');
     const s = String(timeLeft % 60).padStart(2, '0');
-    const el = document.getElementById('countdownText');
-    if (el) el.innerText = `${h}:${m}:${s}`;
+    countdownEl.textContent = `${h}:${m}:${s}`;
   }, 1000);
 
-  /* --- GATE MODAL LOGIC --- */
-  window.openGateModal = function() {
-    document.getElementById('gateModal').classList.add('active');
-    document.getElementById('consoleLog').classList.remove('active');
-    document.getElementById('walletInput').value = '';
+  /* --- GATE MODAL --- */
+  const gateModal = $('gateModal');
+  const walletInput = $('walletInput');
+  const logBox = $('consoleLog');
+  const verifyBtn = $('verifyBtn');
+  const SOLANA_ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/; // base58, 32–44 chars
+  let verifyTimers = [];
+  let lastFocus = null;
+
+  function clearVerifyTimers() {
+    verifyTimers.forEach(clearTimeout);
+    verifyTimers = [];
   }
 
-  window.closeGateModal = function() {
-    document.getElementById('gateModal').classList.remove('active');
+  function resetGate() {
+    clearVerifyTimers();
+    walletInput.value = '';
+    walletInput.classList.remove('invalid');
+    logBox.classList.remove('active');
+    logBox.replaceChildren();
+    verifyBtn.textContent = 'Verify Wallet';
+    verifyBtn.classList.remove('failed');
+    verifyBtn.disabled = false;
   }
 
-  window.handleVerify = function() {
-    const val = document.getElementById('walletInput').value.trim();
-    const btn = document.querySelector('.modal-btn');
-    const logBox = document.getElementById('consoleLog');
-    const logText = document.getElementById('logText');
+  function openGateModal() {
+    lastFocus = document.activeElement;
+    resetGate();
+    gateModal.classList.add('active');
+    document.body.classList.add('locked');
+    setTimeout(() => walletInput.focus(), 50);
+  }
 
-    if (!val) {
-      document.getElementById('walletInput').style.borderColor = 'var(--red)';
+  function closeGateModal() {
+    clearVerifyTimers();
+    gateModal.classList.remove('active');
+    if (!intro.classList.contains('done')) return;
+    document.body.classList.remove('locked');
+    if (lastFocus) lastFocus.focus({ preventScroll: true });
+  }
+
+  function logLine(text, isError) {
+    const line = document.createElement('div');
+    if (isError) {
+      line.append('> Status: ');
+      const span = document.createElement('span');
+      span.className = 'err';
+      span.textContent = text;
+      line.append(span);
+    } else {
+      line.textContent = '> ' + text;
+    }
+    logBox.append(line);
+  }
+
+  function handleVerify(e) {
+    e.preventDefault();
+    if (verifyBtn.disabled) return;
+    const val = walletInput.value.trim();
+
+    if (!SOLANA_ADDRESS.test(val)) {
+      walletInput.classList.add('invalid');
+      logBox.replaceChildren();
+      logLine('INVALID SOLANA ADDRESS', true);
+      logBox.classList.add('active');
+      walletInput.focus();
       return;
     }
 
-    btn.innerText = 'Scanning...';
-    btn.style.opacity = '0.7';
-    btn.disabled = true;
-    document.getElementById('walletInput').style.borderColor = 'var(--border)';
+    clearVerifyTimers();
+    walletInput.classList.remove('invalid');
+    verifyBtn.textContent = 'Scanning...';
+    verifyBtn.disabled = true;
 
+    logBox.replaceChildren();
     logBox.classList.add('active');
-    logText.innerHTML = `> Connecting to Ethereum Mainnet...<br>`;
+    logLine('Connecting to Solana Mainnet...');
+    const short = `${val.slice(0, 4)}…${val.slice(-4)}`;
 
-    setTimeout(() => {
-      logText.innerHTML += `> Fetching $POKELUCK balance for ${val.slice(0,6)}...<br>`;
-    }, 700);
+    verifyTimers.push(setTimeout(() => {
+      logLine(`Fetching $POKELUCK balance for ${short}...`);
+    }, 700));
 
-    setTimeout(() => {
-      logText.innerHTML += `> Status: <span style="color:var(--red)">INSUFFICIENT HOLDINGS</span><br>`;
-      btn.innerText = 'Verification Failed';
-      btn.style.background = 'var(--red)';
-      btn.style.color = '#fff';
-    }, 1600);
+    verifyTimers.push(setTimeout(() => {
+      logLine('INSUFFICIENT HOLDINGS', true);
+      verifyBtn.textContent = 'Verification Failed';
+      verifyBtn.classList.add('failed');
+    }, 1600));
 
-    setTimeout(() => {
-      closeGateModal();
-      setTimeout(() => {
-        btn.innerText = 'Verify Wallet';
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.style.opacity = '1';
-        btn.disabled = false;
-      }, 300);
-    }, 3200);
+    verifyTimers.push(setTimeout(closeGateModal, 3200));
   }
+
+  document.querySelectorAll('[data-open-gate]').forEach(el => el.addEventListener('click', openGateModal));
+  $('gateClose').addEventListener('click', closeGateModal);
+  $('gateForm').addEventListener('submit', handleVerify);
+  walletInput.addEventListener('input', () => walletInput.classList.remove('invalid'));
+  gateModal.addEventListener('click', (e) => { if (e.target === gateModal) closeGateModal(); });
 
   /* --- CHAT WIDGET --- */
-  window.toggleChat = function() {
-    const popup = document.getElementById('chatPopup');
-    popup.classList.toggle('active');
+  const chatPopup = $('chatPopup');
+  const chatToggle = $('chatToggle');
+  const chatBody = $('chatBody');
+  const chatInput = $('chatInput');
+
+  function setChat(open) {
+    chatPopup.classList.toggle('active', open);
+    chatToggle.setAttribute('aria-expanded', String(open));
+    if (open) chatInput.focus();
   }
 
-  window.handleChatSend = function() {
-    const input = document.querySelector('.chat-input input');
-    if (!input.value.trim()) return;
-
-    const body = document.getElementById('chatBody');
-    const userMsg = document.createElement('div');
-    userMsg.className = 'msg user';
-    userMsg.innerText = input.value;
-    body.appendChild(userMsg);
-
-    input.value = '';
-    body.scrollTop = body.scrollHeight;
-
-    setTimeout(() => {
-      const botMsg = document.createElement('div');
-      botMsg.className = 'msg support';
-      botMsg.innerText = "Please ensure your wallet is connected and holding $POKELUCK to open packs.";
-      body.appendChild(botMsg);
-      body.scrollTop = body.scrollHeight;
-    }, 1000);
+  function addMsg(text, who) {
+    const msg = document.createElement('div');
+    msg.className = `msg ${who}`;
+    msg.textContent = text;
+    chatBody.appendChild(msg);
+    chatBody.scrollTop = chatBody.scrollHeight;
   }
 
-  window.handleChatInput = function(e) {
-    if (e.key === 'Enter') handleChatSend();
-  }
+  chatToggle.addEventListener('click', () => setChat(!chatPopup.classList.contains('active')));
+  $('chatClose').addEventListener('click', () => setChat(false));
+  $('chatForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = chatInput.value.trim();
+    if (!text) return;
+    addMsg(text, 'user');
+    chatInput.value = '';
+    setTimeout(() => addMsg('Please ensure your wallet is connected and holding $POKELUCK to open packs.', 'support'), 1000);
+  });
 
-  /* --- FOMO TOAST LOOP --- */
-  const fomoUsers = ['0x4a...9f2', '0x8f...2a', '0x1b...9c', '0x9a...1f', '0x3c...8b', '0x7d...4e'];
-  const fomoVals = ['15,500 $PL', '18,200 $PL', '8,500 $PL', '4,000 $PL', '22,000 $PL'];
-
-  function showFomoToast() {
-    const toast = document.getElementById('fomoToast');
-    const uEl = document.getElementById('fomoUser');
-    const vEl = document.getElementById('fomoVal');
-
-    uEl.innerText = fomoUsers[Math.floor(Math.random() * fomoUsers.length)];
-    vEl.innerText = fomoVals[Math.floor(Math.random() * fomoVals.length)];
-
-    toast.classList.add('active');
-
-    setTimeout(() => {
-      toast.classList.remove('active');
-    }, 5000);
-  }
-
-  // Fire first toast after 5 seconds on site, then loop every 15-20s
-  setTimeout(() => {
-    showFomoToast();
-    setInterval(showFomoToast, 15000 + Math.random() * 5000);
-  }, 5000);
-
+  /* --- ESC closes whatever is open --- */
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (gateModal.classList.contains('active')) closeGateModal();
+    else if (chatPopup.classList.contains('active')) setChat(false);
+  });
+})();
 </script>
 </body>
 </html>
