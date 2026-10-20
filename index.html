@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>PokéLuck — The Ultimate Token-Gated Gacha</title>
-<meta name="description" content="Hold $POKELUCK to unlock premium packs. Boost your luck. 3% max drawdown, 4000%+ potential upside." />
+<title>PokéLuck — Token-Gated Pack Casino</title>
+<meta name="description" content="Hold $POKELUCK to unlock exclusive packs. Boost your luck multiplier. Reduced risk, more rewards." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -98,9 +98,21 @@
     position:relative;
   }
   .logo-icon::before{content:"";position:absolute;inset:0;margin:auto;width:8px;height:8px;background:#fff;border-radius:50%;border:2px solid #111}
-  .nav-links{display:flex;gap:32px}
+  .nav-links{display:flex;gap:32px;align-items:center}
   .nav-links a{font-size:14px;font-weight:500;color:var(--text-muted);transition:color 0.2s}
   .nav-links a:hover,.nav-links a.active{color:var(--text)}
+  
+  /* Nav Tier Progress */
+  .nav-tier{
+    display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);padding:6px 12px;border-radius:99px;cursor:pointer;
+    transition:all 0.2s;margin-right:8px;
+  }
+  .nav-tier:hover{background:rgba(255,255,255,0.06);border-color:var(--text-muted)}
+  .nav-tier span{font-size:12px;font-weight:700;color:var(--gold)}
+  .nav-tier .bar{width:48px;height:4px;background:#1c1f2b;border-radius:99px;overflow:hidden}
+  .nav-tier .bar div{width:60%;height:100%;background:var(--gold)}
+
   .btn{
     display:inline-flex;align-items:center;justify-content:center;
     padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;
@@ -140,7 +152,7 @@
     font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:600px;margin:0 auto 48px;line-height:1.6;
   }
   
-  /* Hero Stats - FOMO bars */
+  /* Hero Stats */
   .hero-stats{
     display:flex;justify-content:center;gap:24px;margin-top:48px;flex-wrap:wrap;
   }
@@ -159,6 +171,46 @@
   .stat-val.blue{color:var(--blue)}
   .stat-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
 
+  /* ============ TICKER ============ */
+  .ticker-wrap{
+    width:100%;overflow:hidden;background:rgba(255,215,0,0.05);
+    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    padding:12px 0;
+  }
+  .ticker{
+    display:inline-block;white-space:nowrap;animation:ticker 25s linear infinite;
+    font-size:13px;font-weight:600;color:var(--gold);
+  }
+  .ticker span{margin-right:48px;display:inline-flex;align-items:center;gap:8px}
+  .ticker span::before{content:"";width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block}
+  @keyframes ticker{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+
+  /* ============ RECENT PULLS CAROUSEL ============ */
+  .recent-section{max-width:1280px;margin:0 auto;padding:40px 24px 0}
+  .recent-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .recent-head h3{font-family:var(--font-display);font-size:18px}
+  .recent-head p{font-size:12px;color:var(--text-muted)}
+  .carousel{display:flex;gap:16px;overflow-x:auto;padding-bottom:16px;scrollbar-width:none}
+  .carousel::-webkit-scrollbar{display:none}
+  .pull-card{
+    flex:0 0 220px;background:var(--surface);border:1px solid var(--border);
+    border-radius:16px;padding:16px;position:relative;overflow:hidden;
+  }
+  .pull-card::after{
+    content:"";position:absolute;top:-20px;right:-20px;width:80px;height:80px;
+    background:radial-gradient(circle, rgba(255,215,0,0.15), transparent 70%);
+  }
+  .pull-tag{
+    display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;
+    letter-spacing:0.05em;padding:4px 8px;border-radius:4px;margin-bottom:12px;
+  }
+  .pull-tag.grail{background:rgba(255,59,48,0.15);color:var(--red)}
+  .pull-tag.epic{background:rgba(255,215,0,0.15);color:var(--gold)}
+  .pull-tag.rare{background:rgba(0,122,255,0.15);color:var(--blue)}
+  .pull-card h4{font-size:15px;font-weight:700;margin-bottom:4px}
+  .pull-card .val{font-size:13px;color:var(--text-muted)}
+  .pull-card .val b{color:var(--text);font-weight:700}
+
   /* ============ PACKS ============ */
   .section{max-width:1280px;margin:0 auto;padding:80px 24px}
   .section-head{margin-bottom:48px;text-align:center}
@@ -171,14 +223,23 @@
     overflow:hidden;transition:all 0.3s var(--ease);position:relative;cursor:pointer;
   }
   .pack-card:hover{transform:translateY(-8px);border-color:var(--border-bright);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
+  .pack-card.whale{
+    background:linear-gradient(180deg, #160a22 0%, #0d0e15 100%);
+    border-color:#3b1d5a;
+  }
+  .pack-card.whale:hover{border-color:#5a2b8a;box-shadow:0 20px 40px rgba(90,43,138,0.2)}
+  
   .pack-img{
     height:220px;position:relative;display:flex;align-items:center;justify-content:center;
     background:linear-gradient(135deg, #1c1f2b, #0d0e15);overflow:hidden;
   }
+  .pack-img.whale-bg{background:linear-gradient(135deg, #2a1142, #0d0e15)}
   .pack-img::after{
     content:"";position:absolute;inset:0;
     background:radial-gradient(circle at 50% 120%, rgba(255,215,0,0.15), transparent 60%);
   }
+  .pack-img.whale-bg::after{background:radial-gradient(circle at 50% 120%, rgba(138,43,226,0.3), transparent 60%)}
+  
   .pack-seal{
     width:90px;height:90px;border-radius:50%;background:#fff;
     border:6px solid #111;position:relative;z-index:1;
@@ -188,6 +249,9 @@
   .pack-card:hover .pack-seal{transform:scale(1.1) rotate(10deg)}
   .pack-seal::before{content:"";position:absolute;left:-6px;right:-6px;top:calc(50% - 3px);height:6px;background:#111}
   .pack-seal::after{content:"";position:absolute;inset:0;margin:auto;width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid #111}
+  .pack-card.whale .pack-seal{background:#111;border-color:#8a2be2}
+  .pack-card.whale .pack-seal::before{background:#8a2be2}
+  .pack-card.whale .pack-seal::after{background:#111;border-color:#8a2be2}
   
   .pack-info{padding:24px}
   .pack-name{font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:8px}
@@ -198,7 +262,6 @@
   .pack-price b{color:var(--text);font-size:18px;font-weight:700}
   .pack-odds{font-size:12px;color:var(--gold);background:rgba(255,215,0,0.1);padding:4px 10px;border-radius:6px;font-weight:600}
   
-  /* Luck Meter on Card */
   .luck-meter{margin-bottom:20px}
   .luck-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;font-weight:600}
   .luck-bar{height:6px;background:#1c1f2b;border-radius:99px;overflow:hidden}
@@ -206,6 +269,10 @@
   
   .pack-action{width:100%;padding:14px;border-radius:12px;background:var(--text);color:var(--bg);font-weight:700;font-size:15px;transition:all 0.2s}
   .pack-card:hover .pack-action{background:var(--gold);color:#000}
+  .pack-card.whale .pack-action{background:rgba(255,255,255,0.05);color:#fff;border:1px solid var(--border-bright)}
+  .pack-card.whale:hover .pack-action{background:#8a2be2;color:#fff;border-color:#8a2be2}
+
+  .drawdown-badge{font-size:11px;color:#30d158;font-weight:600;margin-top:12px;display:block;text-align:center;background:rgba(48,209,88,0.1);padding:6px;border-radius:6px;}
 
   /* ============ HOW IT WORKS ============ */
   .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px;margin-top:40px}
@@ -256,6 +323,14 @@
   }
   .input-group input:focus{border-color:var(--gold)}
   
+  .console-log{
+    background:#000;border:1px solid var(--border);border-radius:8px;
+    padding:12px;text-align:left;font-family:monospace;font-size:11px;
+    color:#30d158;margin-bottom:24px;line-height:1.6;height:0;overflow:hidden;
+    transition:height 0.3s, padding 0.3s, border 0.3s;
+  }
+  .console-log.active{height:auto;padding:12px;border:1px solid var(--border);margin-bottom:24px;}
+  
   .modal-btn{
     width:100%;padding:16px;border-radius:12px;
     background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
@@ -270,16 +345,60 @@
   }
   .modal-close:hover{background:rgba(255,255,255,0.1);color:var(--text)}
 
+  /* ============ CHAT WIDGET ============ */
+  .chat-widget{
+    position:fixed;bottom:24px;right:24px;z-index:900;
+    width:48px;height:48px;border-radius:50%;background:var(--gold);
+    display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 24px rgba(255,215,0,0.3);
+    transition:transform 0.2s;
+  }
+  .chat-widget:hover{transform:scale(1.1)}
+  .chat-widget svg{width:24px;height:24px;fill:#000}
+  .chat-popup{
+    position:fixed;bottom:84px;right:24px;z-index:900;
+    width:320px;background:var(--surface);border:1px solid var(--border-bright);
+    border-radius:16px;display:none;overflow:hidden;
+    box-shadow:0 20px 40px rgba(0,0,0,0.6);animation:modalIn 0.3s var(--ease);
+  }
+  .chat-popup.active{display:block}
+  .chat-head{background:var(--gold);color:#000;padding:12px 16px;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+  .chat-head span{cursor:pointer;font-size:20px;line-height:1}
+  .chat-body{padding:16px;height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+  .msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.4}
+  .msg.user{align-self:flex-end;background:rgba(255,255,255,0.1);color:var(--text);border-bottom-right-radius:4px}
+  .msg.support{align-self:flex-start;background:rgba(255,215,0,0.1);color:var(--text);border-bottom-left-radius:4px;border:1px solid rgba(255,215,0,0.2)}
+  .chat-input{display:flex;border-top:1px solid var(--border);padding:12px}
+  .chat-input input{flex:1;background:none;border:none;color:#fff;font-size:13px;outline:none}
+  .chat-input button{color:var(--gold);font-weight:700;font-size:13px;padding-left:12px}
+
+  /* ============ TOAST FOMO ============ */
+  .fomo-toast{
+    position:fixed;bottom:24px;left:24px;z-index:900;
+    background:var(--surface);border:1px solid var(--border-bright);
+    padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);transform:translateX(-120%);
+    transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .fomo-toast.active{transform:translateX(0)}
+  .fomo-icon{width:32px;height:32px;border-radius:50%;background:rgba(255,59,48,0.15);display:grid;place-items:center;color:var(--red);font-size:16px}
+  .fomo-text-sm{font-size:12px;color:var(--text-muted);font-weight:500}
+  .fomo-text-sm b{color:var(--text);font-weight:700}
+  .fomo-val{font-size:11px;color:var(--gold);font-weight:700;margin-top:2px}
+
   /* ============ FOOTER ============ */
-  footer{border-top:1px solid var(--border);padding:48px 24px;text-align:center;background:#050508}
-  footer p{color:var(--text-muted);font-size:12px;line-height:1.6}
+  footer{border-top:1px solid var(--border);padding:48px 24px;background:#050508}
+  .footer-content{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+  .footer-legal{color:#5c6070;font-size:11px;line-height:1.8;border-top:1px solid var(--border);padding-top:24px;margin-top:8px}
+  .footer-legal p{margin-bottom:12px}
+  .footer-badges{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+  .footer-badge{border:1px solid var(--border);padding:8px 12px;border-radius:8px;font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
 </style>
 </head>
 <body>
 
 <div class="ambient"></div>
 
-<!-- INTRO -->
+<!-- INTRO (Static 15s) -->
 <div id="intro">
   <div class="intro-ball-wrap"><div class="intro-ball"></div></div>
   <div class="intro-loader">
@@ -297,8 +416,14 @@
       <a href="#" class="active">Packs</a>
       <a href="#">$POKELUCK</a>
       <a href="#how">How it Works</a>
+      
+      <!-- Nav Tier Progress -->
+      <div class="nav-tier" onclick="document.getElementById('gateModal').classList.add('active')">
+        <span>Tier 2</span>
+        <div class="bar"><div></div></div>
+      </div>
     </nav>
-    <button class="btn btn-gold" onclick="window.scrollTo({top:0,behavior:'smooth'})">Buy $POKELUCK</button>
+    <button class="btn btn-gold">Buy $POKELUCK</button>
   </div>
 </header>
 
@@ -306,7 +431,7 @@
 <section class="hero">
   <div class="badge"><span class="badge-dot"></span>Live & Verified</div>
   <h1>Hold Tokens.<br><span>Boost Luck.</span></h1>
-  <p>The exclusive token-gated pack casino. The more $POKELUCK you hold, the higher your multiplier. Hard 3% floor on pack value, up to 4000%+ upside. Reduced risk, More rewards.</p>
+  <p>The exclusive token-gated pack casino. The more $POKELUCK you hold, the higher your multiplier. Reduced risk, more rewards.</p>
   <div style="display:flex;gap:16px;justify-content:center;margin-bottom:64px">
     <button class="btn btn-primary" style="padding:16px 32px;font-size:16px" onclick="document.getElementById('packs').scrollIntoView({behavior:'smooth'})">View Packs</button>
     <button class="btn btn-gold" style="padding:16px 32px;font-size:16px">Buy $POKELUCK</button>
@@ -331,210 +456,10 @@
   </div>
 </section>
 
-<!-- PACKS -->
-<section id="packs" class="section">
-  <div class="section-head">
-    <h2>Token-Gated Drops</h2>
-    <p>Your $POKELUCK balance determines your pack luck. Open your first pack to start earning.</p>
-  </div>
-
-  <div class="pack-grid">
-    <!-- Pack 1 -->
-    <div class="pack-card" onclick="openGateModal()">
-      <div class="pack-img"><div class="pack-seal"></div></div>
-      <div class="pack-info">
-        <div class="pack-name">Starter Pack</div>
-        <div class="pack-desc">The perfect entry point. High volume of rare cards.</div>
-        <div class="luck-meter">
-          <div class="luck-label"><span>Luck Boost</span><span>+150%</span></div>
-          <div class="luck-bar"><div class="luck-fill" style="width:25%"></div></div>
-        </div>
-        <div class="pack-meta">
-          <div class="pack-price">Entry: <b>500 $PL</b></div>
-          <div class="pack-odds">Low Risk</div>
-        </div>
-        <button class="pack-action">Verify & Open</button>
-      </div>
-    </div>
-    <!-- Pack 2 -->
-    <div class="pack-card" onclick="openGateModal()">
-      <div class="pack-img"><div class="pack-seal"></div></div>
-      <div class="pack-info">
-        <div class="pack-name">Legendary Series</div>
-        <div class="pack-desc">Higher stakes, significantly better odds for grails.</div>
-        <div class="luck-meter">
-          <div class="luck-label"><span>Luck Boost</span><span>+450%</span></div>
-          <div class="luck-bar"><div class="luck-fill" style="width:55%"></div></div>
-        </div>
-        <div class="pack-meta">
-          <div class="pack-price">Entry: <b>2,500 $PL</b></div>
-          <div class="pack-odds" style="color:var(--blue);background:rgba(0,122,255,0.1)">High Yield</div>
-        </div>
-        <button class="pack-action">Verify & Open</button>
-      </div>
-    </div>
-    <!-- Pack 3 -->
-    <div class="pack-card" onclick="openGateModal()">
-      <div class="pack-img"><div class="pack-seal"></div></div>
-      <div class="pack-info">
-        <div class="pack-name">High Roller Pulls</div>
-        <div class="pack-desc">Maximum upside. For the true whales of the community.</div>
-        <div class="luck-meter">
-          <div class="luck-label"><span>Luck Boost</span><span>+1200%</span></div>
-          <div class="luck-bar"><div class="luck-fill" style="width:90%"></div></div>
-        </div>
-        <div class="pack-meta">
-          <div class="pack-price">Entry: <b>10,000 $PL</b></div>
-          <div class="pack-odds" style="color:var(--red);background:rgba(255,59,48,0.1)">Extreme</div>
-        </div>
-        <button class="pack-action">Verify & Open</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section id="how" class="section" style="padding-top:0">
-  <div class="section-head">
-    <h2>How It Works</h2>
-    <p>The mechanics of guaranteed edge.</p>
-  </div>
-  <div class="how-grid">
-    <div class="how-card">
-      <div class="how-num">01</div>
-      <h3>Acquire $POKELUCK</h3>
-      <p>Buy the token on any DEX. Your wallet balance is instantly indexed by the protocol to determine your <span class="highlight">Luck Tier</span>.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-num">02</div>
-      <h3>Hold & Multiply</h3>
-      <p>The more you hold, the higher your <span class="highlight">Luck Multiplier</span> gets. This directly inflates the EV of every pack you open.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-num">03</div>
-      <h3>The 3% Floor</h3>
-      <p>Every pack draws from our algorithmic pricing model. The draw value is hard-capped at a <span class="highlight">maximum 3% drawdown</span> from entry.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-num">04</div>
-      <h3>The 4000% Ceiling</h3>
-      <p>Grail pulls scale dynamically based on your multiplier. Max tier holders access up to <span class="highlight">4000%+ potential upside</span> on any pull.</p>
-    </div>
-  </div>
-</section>
-
-<!-- GATE MODAL -->
-<div class="modal-overlay" id="gateModal">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeGateModal()">×</button>
-    <div class="modal-bg-anim"></div>
-    
-    <div class="modal-inner">
-      <div class="modal-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-      </div>
-      <h3>Holder Verification</h3>
-      <p>To unlock pack opening, please verify your $POKELUCK holdings.</p>
-      
-      <div class="fomo-text">Hold more tokens to boost your luck multiplier</div>
-
-      <div class="input-group">
-        <label>Wallet Address or Amount Held</label>
-        <input type="text" placeholder="e.g. 50,000 or 0x123..." id="walletInput">
-      </div>
-      
-      <button class="modal-btn" onclick="handleVerify()">Verify Holding</button>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <p>PokéLuck is a memecoin project. This is a parody interface for entertainment purposes only. Not affiliated with Nintendo, Game Freak, or The Pokémon Company.<br><br>Please play responsibly. 18+</p>
-</footer>
-
-<script>
-  // --- INTRO LOGIC ---
-  const introTexts = [
-    "CALCULATING LUCK MULTIPLIERS...",
-    "INDEXING HOLDER TIERS...",
-    "GOTTA CATCH 'EM ALL...",
-    "VERIFYING PACK INTEGRITY...",
-    "SYNCING DEX LIQUIDITY...",
-    "READY."
-  ];
-  let introIdx = 0;
-  const textEl = document.getElementById('introText');
-  const barEl = document.getElementById('introBar');
-  
-  const INTRO_DURATION = 15000; 
-  const startTime = Date.now();
-
-  const introInterval = setInterval(() => {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min((elapsed / INTRO_DURATION) * 100, 100);
-    
-    barEl.style.width = progress + '%';
-
-    const newIdx = Math.floor(elapsed / 2500) % introTexts.length;
-    if (newIdx !== introIdx) {
-      introIdx = newIdx;
-      textEl.style.opacity = 0;
-      setTimeout(() => {
-        textEl.innerText = introTexts[introIdx];
-        textEl.style.opacity = 1;
-      }, 200);
-    }
-
-    if (progress >= 100) {
-      clearInterval(introInterval);
-      document.getElementById('intro').classList.add('done');
-      document.body.style.overflow = '';
-    }
-  }, 50);
-
-  document.body.style.overflow = 'hidden';
-
-  // --- GATE MODAL LOGIC ---
-  function openGateModal() {
-    document.getElementById('gateModal').classList.add('active');
-  }
-
-  function closeGateModal() {
-    document.getElementById('gateModal').classList.remove('active');
-    document.getElementById('walletInput').value = '';
-  }
-
-  function handleVerify() {
-    const val = document.getElementById('walletInput').value.trim();
-    const btn = document.querySelector('.modal-btn');
-    
-    if (!val) {
-      document.getElementById('walletInput').style.borderColor = 'var(--red)';
-      return;
-    }
-
-    btn.innerText = 'Scanning wallet...';
-    btn.style.opacity = '0.7';
-    btn.disabled = true;
-
-    setTimeout(() => {
-      btn.innerText = 'Insufficient Holding';
-      btn.style.background = 'var(--red)';
-      btn.style.color = '#fff';
-      
-      setTimeout(() => {
-        closeGateModal();
-        setTimeout(() => {
-          btn.innerText = 'Verify Holding';
-          btn.style.background = '';
-          btn.style.color = '';
-          btn.style.opacity = '1';
-          btn.disabled = false;
-          document.getElementById('walletInput').style.borderColor = 'var(--border)';
-        }, 300);
-      }, 1500);
-    }, 1500);
-  }
-</script>
-</body>
-</html>
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span>USER 0x8F...2A just pulled a 4000% Grail</span>
+    <span>USER 0x1B...9C just pulled a Legendary Holo</span>
+    <span>USER 0x4D...7E just unlocked Tier 3 Luck</span>
+    <span
