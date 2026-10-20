@@ -24,7 +24,7 @@
   html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased}
   a{text-decoration:none;color:inherit}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-  
+
   .ambient{
     position:fixed;inset:0;z-index:-1;pointer-events:none;
     background:
@@ -40,7 +40,7 @@
     transition:opacity 1s var(--ease),visibility 1s;
   }
   #intro.done{opacity:0;visibility:hidden;pointer-events:none}
-  
+
   .intro-ball-wrap{
     position:relative;width:min(30vmin,180px);aspect-ratio:1;margin-bottom:40px;
     filter:drop-shadow(0 0 40px rgba(255,59,48,0.3));
@@ -61,7 +61,7 @@
     width:8%;height:8%;background:#fff;border-radius:50%;border:2px solid #111;
   }
   @keyframes spin{100%{transform:rotate(360deg)}}
-  
+
   .intro-loader{width:min(400px,80vw);text-align:center}
   .intro-text{
     font-family:var(--font-display);font-size:14px;letter-spacing:0.2em;
@@ -100,7 +100,7 @@
   .nav-links{display:flex;gap:32px;align-items:center}
   .nav-links a{font-size:14px;font-weight:500;color:var(--text-muted);transition:color 0.2s}
   .nav-links a:hover,.nav-links a.active{color:var(--text)}
-  
+
   .nav-tier{
     display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);
     border:1px solid var(--border);padding:6px 12px;border-radius:99px;cursor:pointer;
@@ -127,7 +127,7 @@
     box-shadow:0 4px 14px rgba(255,215,0,0.2);
   }
   .btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,215,0,0.3)}
-  
+
   /* ============ HERO ============ */
   .hero{
     max-width:1280px;margin:0 auto;padding:80px 24px;text-align:center;
@@ -149,7 +149,7 @@
   .hero p{
     font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:600px;margin:0 auto 48px;line-height:1.6;
   }
-  
+
   .hero-stats{
     display:flex;justify-content:center;gap:24px;margin-top:48px;flex-wrap:wrap;
   }
@@ -168,26 +168,12 @@
   .stat-val.blue{color:var(--blue)}
   .stat-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
 
-  /* ============ TICKER ============ */
-  .ticker-wrap{
-    width:100%;overflow:hidden;background:rgba(255,215,0,0.05);
-    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-    padding:12px 0;
-  }
-  .ticker{
-    display:inline-block;white-space:nowrap;animation:ticker 25s linear infinite;
-    font-size:13px;font-weight:600;color:var(--gold);
-  }
-  .ticker span{margin-right:48px;display:inline-flex;align-items:center;gap:8px}
-  .ticker span::before{content:"";width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block}
-  @keyframes ticker{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
-
   /* ============ PACKS ============ */
   .section{max-width:1280px;margin:0 auto;padding:60px 24px 80px}
   .section-head{margin-bottom:32px;text-align:center;position:relative}
   .section-head h2{font-family:var(--font-display);font-size:36px;margin-bottom:12px}
   .section-head p{color:var(--text-muted);font-size:16px}
-  
+
   /* Countdown Timer */
   .countdown-wrap{
     display:inline-flex;align-items:center;gap:8px;margin-top:16px;
@@ -202,13 +188,13 @@
     overflow:hidden;transition:all 0.3s var(--ease);position:relative;cursor:pointer;
   }
   .pack-card:hover{transform:translateY(-8px);border-color:var(--border-bright);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
-  
+
   .pack-card.whale{
     background:linear-gradient(180deg, #160a22 0%, #0d0e15 100%);
     border-color:#3b1d5a;
   }
   .pack-card.whale:hover{border-color:#5a2b8a;box-shadow:0 20px 40px rgba(90,43,138,0.2)}
-  
+
   .pack-img{
     height:220px;position:relative;display:flex;align-items:center;justify-content:center;
     background:linear-gradient(135deg, #1c1f2b, #0d0e15);overflow:hidden;
@@ -219,7 +205,7 @@
     background:radial-gradient(circle at 50% 120%, rgba(255,215,0,0.15), transparent 60%);
   }
   .pack-img.whale-bg::after{background:radial-gradient(circle at 50% 120%, rgba(138,43,226,0.3), transparent 60%)}
-  
+
   .pack-seal{
     width:90px;height:90px;border-radius:50%;background:#fff;
     border:6px solid #111;position:relative;z-index:1;
@@ -232,21 +218,21 @@
   .pack-card.whale .pack-seal{background:#111;border-color:#8a2be2}
   .pack-card.whale .pack-seal::before{background:#8a2be2}
   .pack-card.whale .pack-seal::after{background:#111;border-color:#8a2be2}
-  
+
   .pack-info{padding:24px}
   .pack-name{font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:8px}
   .pack-desc{font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.5}
-  
+
   .pack-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
   .pack-price{font-size:14px;color:var(--text-muted)}
   .pack-price b{color:var(--text);font-size:18px;font-weight:700}
   .pack-odds{font-size:12px;color:var(--gold);background:rgba(255,215,0,0.1);padding:4px 10px;border-radius:6px;font-weight:600}
-  
+
   .luck-meter{margin-bottom:20px}
   .luck-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;font-weight:600}
   .luck-bar{height:6px;background:#1c1f2b;border-radius:99px;overflow:hidden}
   .luck-fill{height:100%;background:linear-gradient(90deg, #ff3b30, #ffd700);border-radius:99px;width:20%;transition:width 0.5s}
-  
+
   .pack-action{width:100%;padding:14px;border-radius:12px;background:var(--text);color:var(--bg);font-weight:700;font-size:15px;transition:all 0.2s}
   .pack-card:hover .pack-action{background:var(--gold);color:#000}
   .pack-card.whale .pack-action{background:rgba(255,255,255,0.05);color:#fff;border:1px solid var(--border-bright)}
@@ -275,14 +261,14 @@
     animation:modalIn 0.4s var(--ease);
   }
   @keyframes modalIn{from{transform:scale(0.95) translateY(10px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-  
+
   .modal-bg-anim{
     position:absolute;top:-50%;left:-50%;width:200%;height:200%;
     background:conic-gradient(from 0deg, transparent, rgba(255,215,0,0.15), transparent 25%);
     animation:rotateBg 3s linear infinite;pointer-events:none;
   }
   @keyframes rotateBg{100%{transform:rotate(360deg)}}
-  
+
   .modal-inner{position:relative;padding:48px 32px;text-align:center;z-index:1}
   .modal-icon{
     width:64px;height:64px;border-radius:50%;background:rgba(255,215,0,0.1);
@@ -293,7 +279,7 @@
   .modal-content h3{font-family:var(--font-display);font-size:24px;margin-bottom:12px}
   .modal-content p{color:var(--text-muted);font-size:14px;line-height:1.5;margin-bottom:24px}
   .modal-content .fomo-text{font-size:12px;color:var(--gold);background:rgba(255,215,0,0.05);padding:8px 12px;border-radius:8px;display:inline-block;margin-bottom:24px;font-weight:600}
-  
+
   .input-group{position:relative;margin-bottom:16px;text-align:left}
   .input-group label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em}
   .input-group input{
@@ -302,7 +288,7 @@
     font-size:15px;transition:border-color 0.2s;outline:none;
   }
   .input-group input:focus{border-color:var(--gold)}
-  
+
   .console-log{
     background:#000;border:1px solid var(--border);border-radius:8px;
     padding:0 12px;text-align:left;font-family:monospace;font-size:11px;
@@ -310,14 +296,14 @@
     transition:all 0.3s var(--ease);opacity:0;
   }
   .console-log.active{height:80px;padding:12px;margin-bottom:24px;opacity:1;border:1px solid var(--border);}
-  
+
   .modal-btn{
     width:100%;padding:16px;border-radius:12px;
     background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
     color:#000;font-weight:700;font-size:16px;transition:all 0.2s;
   }
   .modal-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,215,0,0.3)}
-  
+
   .modal-close{
     position:absolute;top:16px;right:16px;width:32px;height:32px;
     border-radius:50%;background:rgba(255,255,255,0.05);color:var(--text-muted);
@@ -396,7 +382,7 @@
       <a href="#" class="active">Packs</a>
       <a href="#">$POKELUCK</a>
       <a href="#how">How it Works</a>
-      
+
       <div class="nav-tier" onclick="openGateModal()">
         <span>Tier 2</span>
         <div class="bar"><div></div></div>
@@ -435,22 +421,6 @@
   </div>
 </section>
 
-<!-- TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker">
-    <span>USER 0x8F...2A just pulled a 4000% Grail</span>
-    <span>USER 0x1B...9C just pulled a Legendary Holo</span>
-    <span>USER 0x4D...7E just unlocked Tier 3 Luck</span>
-    <span>USER 0x9A...1F just pulled a 1200% Epic</span>
-    <span>USER 0x3C...8B just opened High Roller Pack</span>
-    <span>USER 0x8F...2A just pulled a 4000% Grail</span>
-    <span>USER 0x1B...9C just pulled a Legendary Holo</span>
-    <span>USER 0x4D...7E just unlocked Tier 3 Luck</span>
-    <span>USER 0x9A...1F just pulled a 1200% Epic</span>
-    <span>USER 0x3C...8B just opened High Roller Pack</span>
-  </div>
-</div>
-
 <!-- PACKS -->
 <section id="packs" class="section">
   <div class="section-head">
@@ -486,7 +456,7 @@
     <!-- Pack 2 -->
     <div class="pack-card" onclick="openGateModal()">
       <div class="pack-img">
-        <img src="https://images.pokemontcg.io/base1/4_hires.png" alt="Charizard" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+        <img src="https://images.pokemontcg.io/base1/2_hires.png" alt="Blastoise" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
       </div>
       <div class="pack-info">
         <div class="pack-name">Legendary Series</div>
@@ -526,7 +496,7 @@
     <!-- Pack 4: Whale Vault -->
     <div class="pack-card whale" onclick="openGateModal()">
       <div class="pack-img whale-bg">
-        <img src="https://images.pokemontcg.io/base1/2_hires.png" alt="Blastoise" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+        <img src="https://images.pokemontcg.io/base1/4_hires.png" alt="Charizard" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
       </div>
       <div class="pack-info">
         <div class="pack-name">Whale Vault</div>
@@ -581,14 +551,14 @@
   <div class="modal-content">
     <button class="modal-close" onclick="closeGateModal()">×</button>
     <div class="modal-bg-anim"></div>
-    
+
     <div class="modal-inner">
       <div class="modal-icon">
         <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
       </div>
       <h3>Connect to Verify</h3>
       <p>To unlock pack opening, please connect the wallet containing your $POKELUCK tokens.</p>
-      
+
       <div class="fomo-text">Hold more tokens to boost your luck multiplier</div>
 
       <div class="input-group">
@@ -599,7 +569,7 @@
       <div class="console-log" id="consoleLog">
         <div id="logText"></div>
       </div>
-      
+
       <button class="modal-btn" onclick="handleVerify()">Verify Wallet</button>
     </div>
   </div>
@@ -640,7 +610,7 @@
         <span class="footer-badge">18+</span>
       </div>
     </div>
-    
+
     <div class="footer-legal">
       <p>PokéLuck is a token-gated digital asset platform. All pack openings, token swaps, and gameplay mechanics involve digital assets and carry financial risk. You may lose all funds deposited into the platform. $POKELUCK is a utility token and does not constitute a security, share, or equity in any entity. Pack values are denominated in $POKELUCK and are subject to market volatility. The "3% floor" applies strictly to the algorithmic draw resolution and does not guarantee fiat-denominated value preservation.</p>
       <p>By using this platform, you confirm you are at least 18 years of age and legally permitted to participate in digital asset trading in your jurisdiction. This platform is not available to residents of restricted territories, including but not limited to the United States, United Kingdom, and Australia. PokéLuck is a parody brand and is not affiliated with, endorsed by, or sponsored by Nintendo, Game Freak, or The Pokémon Company. All external Pokémon IP remains the property of its respective owners.</p>
@@ -671,7 +641,7 @@
   let introIdx = 0;
   const textEl = document.getElementById('introText');
   const barEl = document.getElementById('introBar');
-  const INTRO_DURATION = 15000; 
+  const INTRO_DURATION = 15000;
   const startTime = Date.now();
 
   const introInterval = setInterval(() => {
@@ -725,7 +695,7 @@
     const btn = document.querySelector('.modal-btn');
     const logBox = document.getElementById('consoleLog');
     const logText = document.getElementById('logText');
-    
+
     if (!val) {
       document.getElementById('walletInput').style.borderColor = 'var(--red)';
       return;
@@ -738,7 +708,7 @@
 
     logBox.classList.add('active');
     logText.innerHTML = `> Connecting to Ethereum Mainnet...<br>`;
-    
+
     setTimeout(() => {
       logText.innerHTML += `> Fetching $POKELUCK balance for ${val.slice(0,6)}...<br>`;
     }, 700);
@@ -771,13 +741,13 @@
   window.handleChatSend = function() {
     const input = document.querySelector('.chat-input input');
     if (!input.value.trim()) return;
-    
+
     const body = document.getElementById('chatBody');
     const userMsg = document.createElement('div');
     userMsg.className = 'msg user';
     userMsg.innerText = input.value;
     body.appendChild(userMsg);
-    
+
     input.value = '';
     body.scrollTop = body.scrollHeight;
 
@@ -797,17 +767,17 @@
   /* --- FOMO TOAST LOOP --- */
   const fomoUsers = ['0x4a...9f2', '0x8f...2a', '0x1b...9c', '0x9a...1f', '0x3c...8b', '0x7d...4e'];
   const fomoVals = ['15,500 $PL', '18,200 $PL', '8,500 $PL', '4,000 $PL', '22,000 $PL'];
-  
+
   function showFomoToast() {
     const toast = document.getElementById('fomoToast');
     const uEl = document.getElementById('fomoUser');
     const vEl = document.getElementById('fomoVal');
-    
+
     uEl.innerText = fomoUsers[Math.floor(Math.random() * fomoUsers.length)];
     vEl.innerText = fomoVals[Math.floor(Math.random() * fomoVals.length)];
-    
+
     toast.classList.add('active');
-    
+
     setTimeout(() => {
       toast.classList.remove('active');
     }, 5000);
