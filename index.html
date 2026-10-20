@@ -25,7 +25,6 @@
   a{text-decoration:none;color:inherit}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
   
-  /* Ambient Background */
   .ambient{
     position:fixed;inset:0;z-index:-1;pointer-events:none;
     background:
@@ -183,32 +182,6 @@
   .ticker span::before{content:"";width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block}
   @keyframes ticker{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
 
-  /* ============ RECENT PULLS CAROUSEL ============ */
-  .recent-section{max-width:1280px;margin:0 auto;padding:40px 24px 0}
-  .recent-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-  .recent-head h3{font-family:var(--font-display);font-size:18px}
-  .recent-head p{font-size:12px;color:var(--text-muted)}
-  .carousel{display:flex;gap:16px;overflow-x:auto;padding-bottom:16px;scrollbar-width:none}
-  .carousel::-webkit-scrollbar{display:none}
-  .pull-card{
-    flex:0 0 220px;background:var(--surface);border:1px solid var(--border);
-    border-radius:16px;padding:16px;position:relative;overflow:hidden;
-  }
-  .pull-card::after{
-    content:"";position:absolute;top:-20px;right:-20px;width:80px;height:80px;
-    background:radial-gradient(circle, rgba(255,215,0,0.15), transparent 70%);
-  }
-  .pull-tag{
-    display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;
-    letter-spacing:0.05em;padding:4px 8px;border-radius:4px;margin-bottom:12px;
-  }
-  .pull-tag.grail{background:rgba(255,59,48,0.15);color:var(--red)}
-  .pull-tag.epic{background:rgba(255,215,0,0.15);color:var(--gold)}
-  .pull-tag.rare{background:rgba(0,122,255,0.15);color:var(--blue)}
-  .pull-card h4{font-size:15px;font-weight:700;margin-bottom:4px}
-  .pull-card .val{font-size:13px;color:var(--text-muted)}
-  .pull-card .val b{color:var(--text);font-weight:700}
-
   /* ============ PACKS ============ */
   .section{max-width:1280px;margin:0 auto;padding:60px 24px 80px}
   .section-head{margin-bottom:32px;text-align:center;position:relative}
@@ -256,7 +229,6 @@
   .pack-card:hover .pack-seal{transform:scale(1.1) rotate(10deg)}
   .pack-seal::before{content:"";position:absolute;left:-6px;right:-6px;top:calc(50% - 3px);height:6px;background:#111}
   .pack-seal::after{content:"";position:absolute;inset:0;margin:auto;width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid #111}
-  
   .pack-card.whale .pack-seal{background:#111;border-color:#8a2be2}
   .pack-card.whale .pack-seal::before{background:#8a2be2}
   .pack-card.whale .pack-seal::after{background:#111;border-color:#8a2be2}
@@ -277,7 +249,6 @@
   
   .pack-action{width:100%;padding:14px;border-radius:12px;background:var(--text);color:var(--bg);font-weight:700;font-size:15px;transition:all 0.2s}
   .pack-card:hover .pack-action{background:var(--gold);color:#000}
-  
   .pack-card.whale .pack-action{background:rgba(255,255,255,0.05);color:#fff;border:1px solid var(--border-bright)}
   .pack-card.whale:hover .pack-action{background:#8a2be2;color:#fff;border-color:#8a2be2}
 
@@ -332,7 +303,6 @@
   }
   .input-group input:focus{border-color:var(--gold)}
   
-  /* Fake Console Log */
   .console-log{
     background:#000;border:1px solid var(--border);border-radius:8px;
     padding:0 12px;text-align:left;font-family:monospace;font-size:11px;
@@ -481,41 +451,6 @@
   </div>
 </div>
 
-<!-- RECENT PULLS CAROUSEL -->
-<section class="recent-section">
-  <div class="recent-head">
-    <h3>Recent Pulls</h3>
-    <p>Live from the floor</p>
-  </div>
-  <div class="carousel">
-    <div class="pull-card">
-      <span class="pull-tag grail">4000% Grail</span>
-      <h4>Charizard Holo</h4>
-      <div class="val">Pulled by <b>0x8F...2A</b></div>
-    </div>
-    <div class="pull-card">
-      <span class="pull-tag epic">Epic Pull</span>
-      <h4>Mewtwo VMAX</h4>
-      <div class="val">Pulled by <b>0x1B...9C</b></div>
-    </div>
-    <div class="pull-card">
-      <span class="pull-tag rare">Rare Pull</span>
-      <h4>Pikachu V</h4>
-      <div class="val">Pulled by <b>0x4D...7E</b></div>
-    </div>
-    <div class="pull-card">
-      <span class="pull-tag epic">Epic Pull</span>
-      <h4>Umbreon Gold Star</h4>
-      <div class="val">Pulled by <b>0x9A...1F</b></div>
-    </div>
-    <div class="pull-card">
-      <span class="pull-tag rare">Rare Pull</span>
-      <h4>Gengar Holo</h4>
-      <div class="val">Pulled by <b>0x3C...8B</b></div>
-    </div>
-  </div>
-</section>
-
 <!-- PACKS -->
 <section id="packs" class="section">
   <div class="section-head">
@@ -530,7 +465,9 @@
   <div class="pack-grid">
     <!-- Pack 1 -->
     <div class="pack-card" onclick="openGateModal()">
-      <div class="pack-img"><div class="pack-seal"></div></div>
+      <div class="pack-img">
+        <img src="https://images.pokemontcg.io/base1/58_hires.png" alt="Pikachu" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+      </div>
       <div class="pack-info">
         <div class="pack-name">Starter Pack</div>
         <div class="pack-desc">The perfect entry point. High volume of rare cards.</div>
@@ -548,7 +485,9 @@
     </div>
     <!-- Pack 2 -->
     <div class="pack-card" onclick="openGateModal()">
-      <div class="pack-img"><div class="pack-seal"></div></div>
+      <div class="pack-img">
+        <img src="https://images.pokemontcg.io/base1/4_hires.png" alt="Charizard" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+      </div>
       <div class="pack-info">
         <div class="pack-name">Legendary Series</div>
         <div class="pack-desc">Higher stakes, significantly better odds for grails.</div>
@@ -566,7 +505,9 @@
     </div>
     <!-- Pack 3 -->
     <div class="pack-card" onclick="openGateModal()">
-      <div class="pack-img"><div class="pack-seal"></div></div>
+      <div class="pack-img">
+        <img src="https://images.pokemontcg.io/base1/10_hires.png" alt="Mewtwo" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+      </div>
       <div class="pack-info">
         <div class="pack-name">High Roller Pulls</div>
         <div class="pack-desc">Maximum upside. For the true whales of the community.</div>
@@ -584,7 +525,9 @@
     </div>
     <!-- Pack 4: Whale Vault -->
     <div class="pack-card whale" onclick="openGateModal()">
-      <div class="pack-img whale-bg"><div class="pack-seal"></div></div>
+      <div class="pack-img whale-bg">
+        <img src="https://images.pokemontcg.io/base1/2_hires.png" alt="Blastoise" style="height:140px;z-index:1;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s var(--ease);" class="pack-art-img">
+      </div>
       <div class="pack-info">
         <div class="pack-name">Whale Vault</div>
         <div class="pack-desc">Access Denied. Requires Tier 5 holding (100k+ $PL).</div>
@@ -707,6 +650,15 @@
 </footer>
 
 <script>
+  /* --- HOVER IMAGE ANIMATION INJECTION --- */
+  document.querySelectorAll('.pack-card').forEach(card => {
+    const img = card.querySelector('.pack-art-img');
+    if(img){
+      card.addEventListener('mouseenter', () => img.style.transform = 'scale(1.1) rotate(5deg)');
+      card.addEventListener('mouseleave', () => img.style.transform = 'scale(1) rotate(0deg)');
+    }
+  });
+
   /* --- INTRO LOGIC --- */
   const introTexts = [
     "CALCULATING LUCK MULTIPLIERS...",
