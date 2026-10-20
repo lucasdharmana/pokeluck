@@ -178,7 +178,27 @@
   .hero p{
     font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:600px;margin:0 auto 48px;line-height:1.6;
   }
-  .hero-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:72px}
+  .hero-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+
+  /* Contract address pill */
+  .ca-pill{
+    display:inline-flex;align-items:center;gap:10px;max-width:100%;
+    padding:8px 8px 8px 14px;border-radius:14px;margin-bottom:64px;
+    background:rgba(255,255,255,.03);border:1px solid var(--border);
+  }
+  .ca-label{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--gold);flex:none}
+  .ca-pill code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--text);
+    min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .ca-pill.pending code{color:var(--text-muted);font-family:var(--font-sans)}
+  .ca-btn{
+    flex:none;font-size:12px;font-weight:700;padding:6px 10px;border-radius:8px;
+    background:var(--gold-soft);color:var(--gold);border:1px solid rgba(255,215,0,.25);transition:background .2s;
+  }
+  .ca-btn:hover{background:rgba(255,215,0,.2)}
+  .ca-btn[hidden]{display:none}
+  .ca-pill.ca-small{margin-bottom:0;align-self:flex-start}
 
   .hero-stats{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
   .stat-box{
@@ -542,6 +562,15 @@
       <button type="button" class="btn btn-gold btn-lg" data-buy>Buy $POKELUCK</button>
     </div>
 
+    <div class="reveal">
+      <div class="ca-pill pending" data-ca>
+        <span class="ca-label">CA</span>
+        <code data-ca-text>Coming soon</code>
+        <button type="button" class="ca-btn" data-ca-copy hidden>Copy</button>
+        <a class="ca-btn" data-ca-scan target="_blank" rel="noopener" hidden>Solscan ↗</a>
+      </div>
+    </div>
+
     <div class="hero-stats" data-stagger>
       <div class="stat-box reveal">
         <div class="stat-val">3.0%</div>
@@ -753,6 +782,12 @@
         <span class="footer-badge">18+</span>
       </div>
     </div>
+    <div class="ca-pill ca-small pending" data-ca>
+      <span class="ca-label">CA</span>
+      <code data-ca-text>Coming soon</code>
+      <button type="button" class="ca-btn" data-ca-copy hidden>Copy</button>
+      <a class="ca-btn" data-ca-scan target="_blank" rel="noopener" hidden>Solscan ↗</a>
+    </div>
     <div class="footer-legal">
       <p>PokéLuck is a token-gated digital asset platform. All pack openings, token swaps, and gameplay mechanics involve digital assets and carry financial risk. You may lose all funds deposited into the platform. $POKELUCK is a utility token and does not constitute a security, share, or equity in any entity. Pack values are denominated in $POKELUCK and are subject to market volatility. The "3% floor" applies strictly to the algorithmic draw resolution and does not guarantee fiat-denominated value preservation.</p>
       <p>By using this platform, you confirm you are at least 18 years of age and legally permitted to participate in digital asset trading in your jurisdiction. This platform is not available to residents of restricted territories, including but not limited to the United States, United Kingdom, and Australia. PokéLuck is a parody brand and is not affiliated with, endorsed by, or sponsored by Nintendo, Game Freak, or The Pokémon Company. All external Pokémon IP remains the property of its respective owners.</p>
@@ -766,7 +801,10 @@
   'use strict';
 
   /* --- CONFIG --- */
-  // Paste your DEX / buy link here (e.g. a Jupiter or Raydium swap URL). Empty = buttons do nothing.
+  // When the token is live, paste its Solana contract (mint) address between the quotes.
+  // This fills the CA bars and, if BUY_URL is empty, points every Buy button at Jupiter.
+  const CONTRACT_ADDRESS = '';
+  // Optional custom buy link (e.g. a Raydium/pump.fun URL). Leave empty to use Jupiter automatically.
   const BUY_URL = '';
   const INTRO_DURATION = 15000;
 
@@ -871,10 +909,44 @@
     ['top', 'packs', 'how'].forEach(id => { const el = $(id); if (el) observer.observe(el); });
   }
 
+  /* --- CONTRACT ADDRESS --- */
+  const SOLANA_MINT = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+  const ca = CONTRACT_ADDRESS.trim();
+  const caLive = SOLANA_MINT.test(ca);
+
+  if (caLive) {
+    document.querySelectorAll('[data-ca]').forEach(pill => {
+      pill.classList.remove('pending');
+      pill.querySelector('[data-ca-text]').textContent = ca;
+      pill.title = ca;
+      const scan = pill.querySelector('[data-ca-scan]');
+      scan.href = `https://solscan.io/token/${ca}`;
+      scan.hidden = false;
+      const copy = pill.querySelector('[data-ca-copy]');
+      copy.hidden = false;
+      copy.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(ca);
+        } catch {
+          // Fallback for browsers without clipboard access
+          const tmp = document.createElement('textarea');
+          tmp.value = ca;
+          document.body.appendChild(tmp);
+          tmp.select();
+          document.execCommand('copy');
+          tmp.remove();
+        }
+        copy.textContent = 'Copied!';
+        setTimeout(() => { copy.textContent = 'Copy'; }, 1500);
+      });
+    });
+  }
+
   /* --- BUY BUTTONS --- */
+  const buyUrl = BUY_URL || (caLive ? `https://jup.ag/swap/SOL-${ca}` : '');
   document.querySelectorAll('[data-buy]').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (BUY_URL) window.open(BUY_URL, '_blank', 'noopener');
+      if (buyUrl) window.open(buyUrl, '_blank', 'noopener');
     });
   });
 
