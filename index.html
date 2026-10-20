@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>PokéLuck — The Ultimate Pack Casino</title>
-<meta name="description" content="Hold $POKELUCK to open premium packs. 3% max drawdown, 4000%+ potential upside." />
+<title>PokéLuck — The Ultimate Token-Gated Gacha</title>
+<meta name="description" content="Hold $POKELUCK to unlock premium packs. Boost your luck. 3% max drawdown, 4000%+ potential upside." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -24,7 +24,6 @@
   html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased}
   a{text-decoration:none;color:inherit}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-  .hidden{display:none!important}
   
   /* Ambient Background */
   .ambient{
@@ -140,14 +139,25 @@
   .hero p{
     font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:600px;margin:0 auto 48px;line-height:1.6;
   }
+  
+  /* Hero Stats - FOMO bars */
   .hero-stats{
-    display:flex;justify-content:center;gap:48px;margin-top:64px;flex-wrap:wrap;
+    display:flex;justify-content:center;gap:24px;margin-top:48px;flex-wrap:wrap;
   }
-  .stat-box{text-align:center}
-  .stat-val{font-family:var(--font-display);font-size:32px;font-weight:700;margin-bottom:8px}
+  .stat-box{
+    background:var(--surface);border:1px solid var(--border);
+    padding:24px 32px;border-radius:16px;text-align:left;min-width:220px;
+    position:relative;overflow:hidden;
+  }
+  .stat-box::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .stat-val{font-family:var(--font-display);font-size:28px;font-weight:700;margin-bottom:6px}
   .stat-val.green{color:#30d158}
   .stat-val.gold{color:var(--gold)}
-  .stat-label{font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
+  .stat-val.blue{color:var(--blue)}
+  .stat-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
 
   /* ============ PACKS ============ */
   .section{max-width:1280px;margin:0 auto;padding:80px 24px}
@@ -161,12 +171,6 @@
     overflow:hidden;transition:all 0.3s var(--ease);position:relative;cursor:pointer;
   }
   .pack-card:hover{transform:translateY(-8px);border-color:var(--border-bright);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
-  .pack-card::before{
-    content:"";position:absolute;inset:0;border-radius:20px;padding:2px;
-    background:linear-gradient(135deg, rgba(255,255,255,0.1), transparent 50%);
-    -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor;pointer-events:none;
-  }
   .pack-img{
     height:220px;position:relative;display:flex;align-items:center;justify-content:center;
     background:linear-gradient(135deg, #1c1f2b, #0d0e15);overflow:hidden;
@@ -188,12 +192,28 @@
   .pack-info{padding:24px}
   .pack-name{font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:8px}
   .pack-desc{font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.5}
+  
   .pack-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
   .pack-price{font-size:14px;color:var(--text-muted)}
   .pack-price b{color:var(--text);font-size:18px;font-weight:700}
   .pack-odds{font-size:12px;color:var(--gold);background:rgba(255,215,0,0.1);padding:4px 10px;border-radius:6px;font-weight:600}
+  
+  /* Luck Meter on Card */
+  .luck-meter{margin-bottom:20px}
+  .luck-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;font-weight:600}
+  .luck-bar{height:6px;background:#1c1f2b;border-radius:99px;overflow:hidden}
+  .luck-fill{height:100%;background:linear-gradient(90deg, #ff3b30, #ffd700);border-radius:99px;width:20%;transition:width 0.5s}
+  
   .pack-action{width:100%;padding:14px;border-radius:12px;background:var(--text);color:var(--bg);font-weight:700;font-size:15px;transition:all 0.2s}
   .pack-card:hover .pack-action{background:var(--gold);color:#000}
+
+  /* ============ HOW IT WORKS ============ */
+  .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px;margin-top:40px}
+  .how-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
+  .how-num{font-family:var(--font-display);font-size:48px;font-weight:700;color:var(--border-bright);position:absolute;top:20px;right:24px;opacity:0.5}
+  .how-card h3{font-size:20px;margin-bottom:12px;font-weight:700}
+  .how-card p{font-size:14px;color:var(--text-muted);line-height:1.6}
+  .how-card span.highlight{color:var(--gold);font-weight:700}
 
   /* ============ GATE MODAL ============ */
   .modal-overlay{
@@ -203,7 +223,7 @@
   .modal-overlay.active{display:grid}
   .modal-content{
     background:var(--surface);border:1px solid var(--border-bright);
-    border-radius:24px;width:100%;max-width:440px;position:relative;
+    border-radius:24px;width:100%;max-width:460px;position:relative;
     overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.8);
     animation:modalIn 0.4s var(--ease);
   }
@@ -211,8 +231,8 @@
   
   .modal-bg-anim{
     position:absolute;top:-50%;left:-50%;width:200%;height:200%;
-    background:conic-gradient(from 0deg, transparent, rgba(255,215,0,0.1), transparent 30%);
-    animation:rotateBg 4s linear infinite;pointer-events:none;
+    background:conic-gradient(from 0deg, transparent, rgba(255,215,0,0.15), transparent 25%);
+    animation:rotateBg 3s linear infinite;pointer-events:none;
   }
   @keyframes rotateBg{100%{transform:rotate(360deg)}}
   
@@ -220,10 +240,12 @@
   .modal-icon{
     width:64px;height:64px;border-radius:50%;background:rgba(255,215,0,0.1);
     display:grid;place-items:center;margin:0 auto 24px;border:1px solid rgba(255,215,0,0.2);
+    animation:pulse 2s infinite;
   }
   .modal-icon svg{width:32px;height:32px;fill:var(--gold)}
   .modal-content h3{font-family:var(--font-display);font-size:24px;margin-bottom:12px}
-  .modal-content p{color:var(--text-muted);font-size:15px;line-height:1.5;margin-bottom:32px}
+  .modal-content p{color:var(--text-muted);font-size:14px;line-height:1.5;margin-bottom:24px}
+  .modal-content .fomo-text{font-size:12px;color:var(--gold);background:rgba(255,215,0,0.05);padding:8px 12px;border-radius:8px;display:inline-block;margin-bottom:24px;font-weight:600}
   
   .input-group{position:relative;margin-bottom:16px;text-align:left}
   .input-group label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em}
@@ -233,7 +255,6 @@
     font-size:15px;transition:border-color 0.2s;outline:none;
   }
   .input-group input:focus{border-color:var(--gold)}
-  .input-group input::placeholder{color:#4a4e5e}
   
   .modal-btn{
     width:100%;padding:16px;border-radius:12px;
@@ -262,7 +283,7 @@
 <div id="intro">
   <div class="intro-ball-wrap"><div class="intro-ball"></div></div>
   <div class="intro-loader">
-    <div class="intro-text" id="introText">INCREASING PACK LUCK...</div>
+    <div class="intro-text" id="introText">CALCULATING LUCK MULTIPLIERS...</div>
     <div class="intro-bar-bg"><div class="intro-bar-fill" id="introBar"></div></div>
   </div>
   <div class="intro-slogan">Gotta catch 'em all.</div>
@@ -275,35 +296,46 @@
     <nav class="nav-links">
       <a href="#" class="active">Packs</a>
       <a href="#">$POKELUCK</a>
-      <a href="#">Leaderboard</a>
-      <a href="#">How it Works</a>
+      <a href="#how">How it Works</a>
     </nav>
-    <button class="btn btn-gold">Buy $POKELUCK</button>
+    <button class="btn btn-gold" onclick="window.scrollTo({top:0,behavior:'smooth'})">Buy $POKELUCK</button>
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
   <div class="badge"><span class="badge-dot"></span>Live & Verified</div>
-  <h1>The Premium<br><span>Pack Casino</span></h1>
-  <p>Hold $POKELUCK to unlock exclusive packs. Trade, open, and bank the pull with a hard 3% floor on every entry.</p>
-  <div style="display:flex;gap:16px;justify-content:center">
+  <h1>Hold Tokens.<br><span>Boost Luck.</span></h1>
+  <p>The exclusive token-gated pack casino. The more $POKELUCK you hold, the higher your multiplier. Hard 3% floor on pack value, up to 4000%+ upside. No risk, all reward.</p>
+  <div style="display:flex;gap:16px;justify-content:center;margin-bottom:64px">
     <button class="btn btn-primary" style="padding:16px 32px;font-size:16px" onclick="document.getElementById('packs').scrollIntoView({behavior:'smooth'})">View Packs</button>
     <button class="btn btn-gold" style="padding:16px 32px;font-size:16px">Buy $POKELUCK</button>
   </div>
 
   <div class="hero-stats">
-    <div class="stat-box"><div class="stat-val">3.0%</div><div class="stat-label">Max Drawdown</div></div>
-    <div class="stat-box"><div class="stat-val gold">4000%+</div><div class="stat-label">Upside</div></div>
-    <div class="stat-box"><div class="stat-val green">$18.4M</div><div class="stat-label">Market Cap</div></div>
+    <div class="stat-box">
+      <div class="stat-val">3.0%</div>
+      <div class="stat-label">Max Drawdown</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:8px">Pack floor guaranteed</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val gold">4000%+</div>
+      <div class="stat-label">Max Upside</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:8px">Grail pull ceiling</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val blue">x100</div>
+      <div class="stat-label">Luck Multiplier</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:8px">At max token tier</div>
+    </div>
   </div>
 </section>
 
 <!-- PACKS -->
 <section id="packs" class="section">
   <div class="section-head">
-    <h2>Exclusive Pack Drops</h2>
-    <p>Every pack is backed by the $POKELUCK treasury. Open your first pack to start earning.</p>
+    <h2>Token-Gated Drops</h2>
+    <p>Your $POKELUCK balance determines your pack luck. Open your first pack to start earning.</p>
   </div>
 
   <div class="pack-grid">
@@ -313,6 +345,10 @@
       <div class="pack-info">
         <div class="pack-name">Starter Pack</div>
         <div class="pack-desc">The perfect entry point. High volume of rare cards.</div>
+        <div class="luck-meter">
+          <div class="luck-label"><span>Luck Boost</span><span>+150%</span></div>
+          <div class="luck-bar"><div class="luck-fill" style="width:25%"></div></div>
+        </div>
         <div class="pack-meta">
           <div class="pack-price">Entry: <b>500 $PL</b></div>
           <div class="pack-odds">Low Risk</div>
@@ -326,6 +362,10 @@
       <div class="pack-info">
         <div class="pack-name">Legendary Series</div>
         <div class="pack-desc">Higher stakes, significantly better odds for grails.</div>
+        <div class="luck-meter">
+          <div class="luck-label"><span>Luck Boost</span><span>+450%</span></div>
+          <div class="luck-bar"><div class="luck-fill" style="width:55%"></div></div>
+        </div>
         <div class="pack-meta">
           <div class="pack-price">Entry: <b>2,500 $PL</b></div>
           <div class="pack-odds" style="color:var(--blue);background:rgba(0,122,255,0.1)">High Yield</div>
@@ -339,12 +379,46 @@
       <div class="pack-info">
         <div class="pack-name">High Roller Pulls</div>
         <div class="pack-desc">Maximum upside. For the true whales of the community.</div>
+        <div class="luck-meter">
+          <div class="luck-label"><span>Luck Boost</span><span>+1200%</span></div>
+          <div class="luck-bar"><div class="luck-fill" style="width:90%"></div></div>
+        </div>
         <div class="pack-meta">
           <div class="pack-price">Entry: <b>10,000 $PL</b></div>
           <div class="pack-odds" style="color:var(--red);background:rgba(255,59,48,0.1)">Extreme</div>
         </div>
         <button class="pack-action">Verify & Open</button>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="section" style="padding-top:0">
+  <div class="section-head">
+    <h2>How It Works</h2>
+    <p>The mechanics of guaranteed edge.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-num">01</div>
+      <h3>Acquire $POKELUCK</h3>
+      <p>Buy the token on any DEX. Your wallet balance is instantly indexed by the protocol to determine your <span class="highlight">Luck Tier</span>.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">02</div>
+      <h3>Hold & Multiply</h3>
+      <p>The more you hold, the higher your <span class="highlight">Luck Multiplier</span> gets. This directly inflates the EV of every pack you open.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">03</div>
+      <h3>The 3% Floor</h3>
+      <p>Every pack draws from our algorithmic pricing model. The draw value is hard-capped at a <span class="highlight">maximum 3% drawdown</span> from entry.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">04</div>
+      <h3>The 4000% Ceiling</h3>
+      <p>Grail pulls scale dynamically based on your multiplier. Max tier holders access up to <span class="highlight">4000%+ potential upside</span> on any pull.</p>
     </div>
   </div>
 </section>
@@ -359,12 +433,14 @@
       <div class="modal-icon">
         <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
       </div>
-      <h3>Holder Verification Required</h3>
-      <p>To open packs, you must hold $POKELUCK in your wallet. Verify your holding below to unlock the platform.</p>
+      <h3>Holder Verification</h3>
+      <p>To unlock pack opening, please verify your $POKELUCK holdings.</p>
       
+      <div class="fomo-text">Hold more tokens to boost your luck multiplier</div>
+
       <div class="input-group">
         <label>Wallet Address or Amount Held</label>
-        <input type="text" placeholder="e.g. 15,000 or 0x123..." id="walletInput">
+        <input type="text" placeholder="e.g. 50,000 or 0x123..." id="walletInput">
       </div>
       
       <button class="modal-btn" onclick="handleVerify()">Verify Holding</button>
@@ -379,18 +455,17 @@
 <script>
   // --- INTRO LOGIC ---
   const introTexts = [
-    "INCREASING PACK LUCK...",
+    "CALCULATING LUCK MULTIPLIERS...",
+    "INDEXING HOLDER TIERS...",
     "GOTTA CATCH 'EM ALL...",
-    "VERIFYING $POKELUCK HOLDINGS...",
-    "PIKA-PIKA...",
-    "SYNCING TREASURY...",
+    "VERIFYING PACK INTEGRITY...",
+    "SYNCING DEX LIQUIDITY...",
     "READY."
   ];
   let introIdx = 0;
   const textEl = document.getElementById('introText');
   const barEl = document.getElementById('introBar');
   
-  // 15 seconds total intro time
   const INTRO_DURATION = 15000; 
   const startTime = Date.now();
 
@@ -400,7 +475,6 @@
     
     barEl.style.width = progress + '%';
 
-    // Cycle text every 2.5 seconds
     const newIdx = Math.floor(elapsed / 2500) % introTexts.length;
     if (newIdx !== introIdx) {
       introIdx = newIdx;
@@ -439,20 +513,17 @@
       return;
     }
 
-    // Fake loading state to look professional
-    btn.innerText = 'Verifying on-chain...';
+    btn.innerText = 'Scanning wallet...';
     btn.style.opacity = '0.7';
     btn.disabled = true;
 
     setTimeout(() => {
-      // Just pretend it failed to trigger FOMO and force them to buy coin
-      btn.innerText = 'Verification Failed';
+      btn.innerText = 'Insufficient Holding';
       btn.style.background = 'var(--red)';
       btn.style.color = '#fff';
       
       setTimeout(() => {
         closeGateModal();
-        // Reset button after close
         setTimeout(() => {
           btn.innerText = 'Verify Holding';
           btn.style.background = '';
