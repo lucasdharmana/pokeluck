@@ -122,16 +122,6 @@
   .nav-links a:hover,.nav-links a.active{color:var(--text)}
   .nav-links a.active::after{transform:scaleX(1)}
 
-  .nav-tier{
-    display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);
-    border:1px solid var(--border);padding:6px 12px;border-radius:99px;cursor:pointer;
-    transition:background 0.2s,border-color 0.2s;margin-right:8px;
-  }
-  .nav-tier:hover{background:var(--gold-soft);border-color:rgba(255,215,0,.35)}
-  .nav-tier span{font-size:12px;font-weight:800;color:var(--gold)}
-  .nav-tier .bar{width:48px;height:4px;background:#1c1f2b;border-radius:99px;overflow:hidden}
-  .nav-tier .bar div{width:60%;height:100%;background:var(--gold)}
-
   .btn{
     display:inline-flex;align-items:center;justify-content:center;
     padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;white-space:nowrap;
@@ -481,8 +471,6 @@
     :root{--header-h:64px}
     .nav{padding:0 16px;gap:8px}
     .logo{font-size:18px;gap:8px}
-    .nav-tier{margin-right:0;padding:6px 10px}
-    .nav-tier .bar{display:none}
     .nav .btn{padding:10px 14px;font-size:13px}
     .hero{padding:64px 16px}
     .section{padding:56px 16px 64px}
@@ -528,10 +516,6 @@
       <a href="#packs" class="active" data-section="packs">Packs</a>
       <a href="#top" data-section="top">$POKELUCK</a>
       <a href="#how" data-section="how">How it Works</a>
-      <button type="button" class="nav-tier" data-open-gate aria-label="View your holder tier">
-        <span>Tier 2</span>
-        <div class="bar"><div></div></div>
-      </button>
     </nav>
     <button type="button" class="btn btn-gold" data-buy>Buy $POKELUCK</button>
   </div>
