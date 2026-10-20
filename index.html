@@ -25,7 +25,6 @@
   a{text-decoration:none;color:inherit}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
   
-  /* Ambient Background */
   .ambient{
     position:fixed;inset:0;z-index:-1;pointer-events:none;
     background:
@@ -102,7 +101,6 @@
   .nav-links a{font-size:14px;font-weight:500;color:var(--text-muted);transition:color 0.2s}
   .nav-links a:hover,.nav-links a.active{color:var(--text)}
   
-  /* Nav Tier Progress */
   .nav-tier{
     display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);
     border:1px solid var(--border);padding:6px 12px;border-radius:99px;cursor:pointer;
@@ -130,7 +128,6 @@
   }
   .btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,215,0,0.3)}
   
-  /* ============ HERO ============ */
   .hero{
     max-width:1280px;margin:0 auto;padding:100px 24px;text-align:center;
   }
@@ -152,7 +149,6 @@
     font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:600px;margin:0 auto 48px;line-height:1.6;
   }
   
-  /* Hero Stats */
   .hero-stats{
     display:flex;justify-content:center;gap:24px;margin-top:48px;flex-wrap:wrap;
   }
@@ -171,7 +167,6 @@
   .stat-val.blue{color:var(--blue)}
   .stat-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
 
-  /* ============ TICKER ============ */
   .ticker-wrap{
     width:100%;overflow:hidden;background:rgba(255,215,0,0.05);
     border-top:1px solid var(--border);border-bottom:1px solid var(--border);
@@ -185,7 +180,6 @@
   .ticker span::before{content:"";width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block}
   @keyframes ticker{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
 
-  /* ============ RECENT PULLS CAROUSEL ============ */
   .recent-section{max-width:1280px;margin:0 auto;padding:40px 24px 0}
   .recent-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
   .recent-head h3{font-family:var(--font-display);font-size:18px}
@@ -211,7 +205,6 @@
   .pull-card .val{font-size:13px;color:var(--text-muted)}
   .pull-card .val b{color:var(--text);font-weight:700}
 
-  /* ============ PACKS ============ */
   .section{max-width:1280px;margin:0 auto;padding:80px 24px}
   .section-head{margin-bottom:48px;text-align:center}
   .section-head h2{font-family:var(--font-display);font-size:36px;margin-bottom:12px}
@@ -274,7 +267,6 @@
 
   .drawdown-badge{font-size:11px;color:#30d158;font-weight:600;margin-top:12px;display:block;text-align:center;background:rgba(48,209,88,0.1);padding:6px;border-radius:6px;}
 
-  /* ============ HOW IT WORKS ============ */
   .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px;margin-top:40px}
   .how-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
   .how-num{font-family:var(--font-display);font-size:48px;font-weight:700;color:var(--border-bright);position:absolute;top:20px;right:24px;opacity:0.5}
@@ -282,7 +274,6 @@
   .how-card p{font-size:14px;color:var(--text-muted);line-height:1.6}
   .how-card span.highlight{color:var(--gold);font-weight:700}
 
-  /* ============ GATE MODAL ============ */
   .modal-overlay{
     position:fixed;inset:0;background:rgba(5,5,8,0.9);backdrop-filter:blur(10px);
     z-index:1000;display:none;place-items:center;padding:24px;
@@ -345,7 +336,6 @@
   }
   .modal-close:hover{background:rgba(255,255,255,0.1);color:var(--text)}
 
-  /* ============ CHAT WIDGET ============ */
   .chat-widget{
     position:fixed;bottom:24px;right:24px;z-index:900;
     width:48px;height:48px;border-radius:50%;background:var(--gold);
@@ -371,7 +361,6 @@
   .chat-input input{flex:1;background:none;border:none;color:#fff;font-size:13px;outline:none}
   .chat-input button{color:var(--gold);font-weight:700;font-size:13px;padding-left:12px}
 
-  /* ============ TOAST FOMO ============ */
   .fomo-toast{
     position:fixed;bottom:24px;left:24px;z-index:900;
     background:var(--surface);border:1px solid var(--border-bright);
@@ -385,7 +374,6 @@
   .fomo-text-sm b{color:var(--text);font-weight:700}
   .fomo-val{font-size:11px;color:var(--gold);font-weight:700;margin-top:2px}
 
-  /* ============ FOOTER ============ */
   footer{border-top:1px solid var(--border);padding:48px 24px;background:#050508}
   .footer-content{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
   .footer-legal{color:#5c6070;font-size:11px;line-height:1.8;border-top:1px solid var(--border);padding-top:24px;margin-top:8px}
@@ -398,7 +386,6 @@
 
 <div class="ambient"></div>
 
-<!-- INTRO (Static 15s) -->
 <div id="intro">
   <div class="intro-ball-wrap"><div class="intro-ball"></div></div>
   <div class="intro-loader">
@@ -408,7 +395,6 @@
   <div class="intro-slogan">Gotta catch 'em all.</div>
 </div>
 
-<!-- NAV -->
 <header>
   <div class="nav">
     <div class="logo"><div class="logo-icon"></div>PokéLuck</div>
@@ -417,7 +403,6 @@
       <a href="#">$POKELUCK</a>
       <a href="#how">How it Works</a>
       
-      <!-- Nav Tier Progress -->
       <div class="nav-tier" onclick="document.getElementById('gateModal').classList.add('active')">
         <span>Tier 2</span>
         <div class="bar"><div></div></div>
@@ -427,7 +412,6 @@
   </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <div class="badge"><span class="badge-dot"></span>Live & Verified</div>
   <h1>Hold Tokens.<br><span>Boost Luck.</span></h1>
@@ -456,10 +440,21 @@
   </div>
 </section>
 
-<!-- TICKER -->
 <div class="ticker-wrap">
   <div class="ticker">
     <span>USER 0x8F...2A just pulled a 4000% Grail</span>
     <span>USER 0x1B...9C just pulled a Legendary Holo</span>
     <span>USER 0x4D...7E just unlocked Tier 3 Luck</span>
-    <span
+    <span>USER 0x9A...1F just pulled a 1200% Epic</span>
+    <span>USER 0x3C...8B just opened High Roller Pack</span>
+    <span>USER 0x8F...2A just pulled a 4000% Grail</span>
+    <span>USER 0x1B...9C just pulled a Legendary Holo</span>
+    <span>USER 0x4D...7E just unlocked Tier 3 Luck</span>
+    <span>USER 0x9A...1F just pulled a 1200% Epic</span>
+    <span>USER 0x3C...8B just opened High Roller Pack</span>
+  </div>
+</div>
+
+<section class="recent-section">
+  <div class="recent-head">
+    <h3>Recent Pulls</h
