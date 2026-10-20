@@ -6,6 +6,7 @@
 <title>PokéLuck — Token-Gated Pack Casino</title>
 <meta name="description" content="Hold $POKELUCK to unlock exclusive packs. Boost your luck multiplier. Reduced risk, more rewards." />
 <meta name="theme-color" content="#050508" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M4 50a46 46 0 0 1 92 0z' fill='%23ff3b30'/%3E%3Cpath d='M4 50a46 46 0 0 0 92 0z' fill='%23fff'/%3E%3Ccircle cx='50' cy='50' r='46' fill='none' stroke='%23111' stroke-width='6'/%3E%3Cpath d='M4 50h92' stroke='%23111' stroke-width='7'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%23fff' stroke='%23111' stroke-width='6'/%3E%3Ccircle cx='50' cy='50' r='6' fill='%23fff' stroke='%23111' stroke-width='2'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://images.pokemontcg.io" crossorigin>
@@ -121,6 +122,17 @@
   .nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:var(--gold);transform:scaleX(0);transition:transform .3s var(--ease)}
   .nav-links a:hover,.nav-links a.active{color:var(--text)}
   .nav-links a.active::after{transform:scaleX(1)}
+
+  .nav-actions{display:flex;align-items:center;gap:10px}
+  .x-link{
+    width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;
+    background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);
+    transition:background .2s,border-color .2s,color .2s,transform .2s var(--ease);
+  }
+  .x-link svg{width:17px;height:17px;fill:currentColor}
+  .x-link:hover{background:var(--gold-soft);border-color:rgba(255,215,0,.4);color:var(--gold);transform:translateY(-2px)}
+  .footer-badges .x-link{width:34px;height:34px;border-radius:8px}
+  .footer-badges .x-link svg{width:14px;height:14px}
 
   .btn{
     display:inline-flex;align-items:center;justify-content:center;
@@ -492,6 +504,8 @@
     .nav{padding:0 16px;gap:8px}
     .logo{font-size:18px;gap:8px}
     .nav .btn{padding:10px 14px;font-size:13px}
+    .nav-actions{gap:8px}
+    .nav .x-link{width:38px;height:38px}
     .hero{padding:64px 16px}
     .section{padding:56px 16px 64px}
     .stat-box{min-width:0;width:100%}
@@ -537,7 +551,12 @@
       <a href="#top" data-section="top">$POKELUCK</a>
       <a href="#how" data-section="how">How it Works</a>
     </nav>
-    <button type="button" class="btn btn-gold" data-buy>Buy $POKELUCK</button>
+    <div class="nav-actions">
+      <a href="https://x.com/pokelucktech" class="x-link" target="_blank" rel="noopener" aria-label="PokéLuck on X">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <button type="button" class="btn btn-gold" data-buy>Buy $POKELUCK</button>
+    </div>
   </div>
 </header>
 
@@ -777,6 +796,9 @@
     <div class="footer-top">
       <div class="logo"><div class="logo-icon"></div>PokéLuck</div>
       <div class="footer-badges">
+        <a href="https://x.com/pokelucktech" class="x-link" target="_blank" rel="noopener" aria-label="PokéLuck on X">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
         <span class="footer-badge">Provably Fair</span>
         <span class="footer-badge">Audited</span>
         <span class="footer-badge">18+</span>
